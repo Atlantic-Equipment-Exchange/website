@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Sell Equipment | Atlantic Equipment Exchange</title>
+
+    <meta name="description"
+          content="List your equipment for sale on Atlantic Equipment Exchange.">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <a href="index.html" class="logo">
+                Atlantic Equipment Exchange
+            </a>
+
+            <nav class="main-nav">
+
+                <a href="index.html">Home</a>
+
+                <a href="browse.html">Browse Equipment</a>
+
+                <a href="sell.html">Sell Equipment</a>
+
+                <a href="wanted.html">Wanted</a>
+
+                <a href="how-it-works.html">How It Works</a>
+
+                <a href="contact.html">Contact</a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="page-header">
+
+            <div class="container">
+
+                <p class="eyebrow">
+                    SELL YOUR EQUIPMENT
+                </p>
+
+                <h1>
+                    List Your Equipment
+                </h1>
+
+                <p>
+                    Reach potential buyers across Atlantic Canada.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="sell-form-section">
+
+            <div class="container">
+
+                <div class="form-container">
+
+                    <div class="form-introduction">
+
+                        <h2>
+                            Equipment Details
+                        </h2>
+
+                        <p>
+                            Provide as much information as possible
+                            so potential buyers can understand what
+                            you are offering.
+                        </p>
+
+                    </div>
+
+
+                    <form id="equipment-form">
+
+
+                        <!-- =====================================
+                             BASIC INFORMATION
+                        ====================================== -->
+
+                        <div class="form-section">
+
+                            <h3>
+                                Basic Information
+                            </h3>
+
+
+                            <div class="form-group">
+
+                                <label for="equipment-title">
+                                    Equipment Title *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="equipment-title"
+                                    name="title"
+                                    placeholder="e.g. Trimble GNSS Receiver"
+                                    required>
+
+                            </div>
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="category">
+                                        Category *
+                                    </label>
+
+                                    <select
+                                        id="category"
+                                        name="category"
+                                        required>
+
+                                        <option value="">
+                                            Select category
+                                        </option>
+
+                                        <option value="marine">
+                                            Marine
+                                        </option>
+
+                                        <option value="surveying">
+                                            Surveying
+                                        </option>
+
+                                        <option value="geotechnical">
+                                            Geotechnical
+                                        </option>
+
+                                        <option value="environmental">
+                                            Environmental
+                                        </option>
+
+                                        <option value="industrial">
+                                            Industrial
+                                        </option>
+
+                                        <option value="scientific">
+                                            Scientific
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="condition">
+                                        Condition *
+                                    </label>
+
+                                    <select
+                                        id="condition"
+                                        name="condition"
+                                        required>
+
+                                        <option value="">
+                                            Select condition
+                                        </option>
+
+                                        <option value="new">
+                                            New
+                                        </option>
+
+                                        <option value="excellent">
+                                            Used - Excellent
+                                        </option>
+
+                                        <option value="good">
+                                            Used - Good
+                                        </option>
+
+                                        <option value="fair">
+                                            Used - Fair
+                                        </option>
+
+                                        <option value="parts">
+                                            For Parts
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="description">
+                                    Description *
+                                </label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    rows="7"
+                                    placeholder="Describe the equipment, specifications, age, condition, accessories, service history, etc."
+                                    required></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             PRICE AND LOCATION
+                        ====================================== -->
+
+                        <div class="form-section">
+
+                            <h3>
+                                Price & Location
+                            </h3>
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="price">
+                                        Asking Price (CAD) *
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="price"
+                                        name="price"
+                                        min="0"
+                                        step="0.01"
+                                        placeholder="4500"
+                                        required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="location">
+                                        Province *
+                                    </label>
+
+                                    <select
+                                        id="location"
+                                        name="location"
+                                        required>
+
+                                        <option value="">
+                                            Select province
+                                        </option>
+
+                                        <option value="nova-scotia">
+                                            Nova Scotia
+                                        </option>
+
+                                        <option value="new-brunswick">
+                                            New Brunswick
+                                        </option>
+
+                                        <option value="pei">
+                                            Prince Edward Island
+                                        </option>
+
+                                        <option value="newfoundland">
+                                            Newfoundland & Labrador
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="city">
+                                    City / Area *
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    placeholder="e.g. Dartmouth"
+                                    required>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             SELLER INFORMATION
+                        ====================================== -->
+
+                        <div class="form-section">
+
+                            <h3>
+                                Seller Information
+                            </h3>
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="seller-name">
+                                        Name *
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="seller-name"
+                                        name="seller_name"
+                                        required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="seller-company">
+                                        Company
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="seller-company"
+                                        name="seller_company"
+                                        placeholder="Optional">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-row">
+
+                                <div class="form-group">
+
+                                    <label for="seller-email">
+                                        Email *
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="seller-email"
+                                        name="seller_email"
+                                        required>
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <label for="seller-phone">
+                                        Phone
+                                    </label>
+
+                                    <input
+                                        type="tel"
+                                        id="seller-phone"
+                                        name="seller_phone"
+                                        placeholder="Optional">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             PHOTOS
+                        ====================================== -->
+
+                        <div class="form-section">
+
+                            <h3>
+                                Equipment Photos
+                            </h3>
+
+                            <p class="form-help">
+                                Photos will help buyers evaluate
+                                the equipment. You can upload
+                                multiple images.
+                            </p>
+
+
+                            <div class="form-group">
+
+                                <label for="photos">
+                                    Photos
+                                </label>
+
+                                <input
+                                    type="file"
+                                    id="photos"
+                                    name="photos"
+                                    accept="image/*"
+                                    multiple>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =====================================
+                             SUBMIT
+                        ====================================== -->
+
+                        <div class="form-submit">
+
+                            <button
+                                type="submit"
+                                class="button form-submit-button">
+
+                                Submit Equipment Listing
+
+                            </button>
+
+                            <p class="form-help">
+                                Your listing will be reviewed
+                                before appearing publicly.
+                            </p>
+
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer class="site-footer">
+
+        <div class="container footer-grid">
+
+            <div>
+
+                <h3>
+                    Atlantic Equipment Exchange
+                </h3>
+
+                <p>
+                    Buy, sell, source and broker specialized
+                    equipment across Atlantic Canada.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Marketplace
+                </h4>
+
+                <a href="browse.html">
+                    Browse Equipment
+                </a>
+
+                <a href="sell.html">
+                    Sell Equipment
+                </a>
+
+                <a href="wanted.html">
+                    Wanted Equipment
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Information
+                </h4>
+
+                <a href="how-it-works.html">
+                    How It Works
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container footer-bottom">
+
+            <p>
+                © 2026 Atlantic Equipment Exchange.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+</body>
+
+</html>
