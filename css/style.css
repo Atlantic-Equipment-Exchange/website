@@ -1090,3 +1090,174 @@ body {
     }
 
 }
+/* =========================================================
+   SELL EQUIPMENT FORM
+========================================================= */
+
+.sell-form-section {
+    padding: 70px 0 100px;
+}
+
+
+.form-container {
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    background: white;
+
+    padding: 45px;
+
+    border:
+        1px solid #e0e6ea;
+
+    border-radius: 10px;
+}
+
+
+.form-introduction {
+    margin-bottom: 40px;
+}
+
+
+.form-introduction h2 {
+    margin-top: 0;
+
+    color: #102f45;
+
+    font-size: 2rem;
+}
+
+
+.form-introduction p {
+    color: #687782;
+}
+
+
+.form-section {
+    padding: 35px 0;
+
+    border-top:
+        1px solid #e5eaed;
+}
+
+
+.form-section:first-of-type {
+    border-top: none;
+
+    padding-top: 0;
+}
+
+
+.form-section h3 {
+    margin-top: 0;
+
+    color: #102f45;
+
+    font-size: 1.35rem;
+}
+
+
+.form-row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+}
+
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #344955;
+
+    font-size: 0.88rem;
+
+    font-weight: 700;
+}
+
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    padding: 13px;
+
+    border:
+        1px solid #d3dbe1;
+
+    border-radius: 5px;
+
+    background: white;
+
+    color: #1f2933;
+
+    font-family: inherit;
+
+    font-size: 0.95rem;
+}
+
+
+.form-group textarea {
+    resize: vertical;
+}
+
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    border-color: #174b69;
+
+    box-shadow:
+        0 0 0 3px rgba(23,75,105,0.10);
+}
+
+
+.form-help {
+    color: #687782;
+
+    font-size: 0.83rem;
+}
+
+
+.form-submit {
+    padding-top: 30px;
+
+    border-top:
+        1px solid #e5eaed;
+}
+
+
+.form-submit-button {
+    background: #174b69;
+
+    color: white;
+
+    border-color: #174b69;
+}
+
+
+@media (max-width: 700px) {
+
+    .form-container {
+        padding: 25px;
+    }
+
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+}
