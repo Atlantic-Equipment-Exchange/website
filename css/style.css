@@ -1038,3 +1038,55 @@ body {
     }
 
 }
+/* =========================================================
+   CLEAR FILTERS
+========================================================= */
+
+.listing-header-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.clear-filters-button {
+    display: none;
+
+    padding: 11px 15px;
+
+    border: 1px solid #174b69;
+
+    border-radius: 5px;
+
+    background: white;
+
+    color: #174b69;
+
+    font-size: 0.85rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.clear-filters-button:hover {
+    background: #174b69;
+
+    color: white;
+}
+
+
+@media (max-width: 750px) {
+
+    .listing-header-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+}
