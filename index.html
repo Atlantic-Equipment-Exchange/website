@@ -2,99 +2,598 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Atlantic Equipment Exchange</title>
+    <title>Atlantic Equipment Exchange | Buy, Sell & Source Equipment</title>
 
     <meta name="description"
-          content="Buy, sell and source specialized equipment across Atlantic Canada.">
+          content="Buy, sell, source and broker specialized equipment across Atlantic Canada.">
+
+    <link rel="stylesheet" href="css/style.css">
 
 </head>
 
+
 <body>
 
-    <header>
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
 
-        <h1>Atlantic Equipment Exchange</h1>
+    <header class="site-header">
 
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="browse.html">Browse Equipment</a>
-            <a href="sell.html">Sell Equipment</a>
-            <a href="wanted.html">Wanted Equipment</a>
-            <a href="how-it-works.html">How It Works</a>
-            <a href="contact.html">Contact</a>
-        </nav>
+        <div class="container header-inner">
+
+            <a href="index.html" class="logo">
+                Atlantic Equipment Exchange
+            </a>
+
+
+            <nav class="main-nav">
+
+                <a href="index.html">Home</a>
+
+                <a href="browse.html">Browse Equipment</a>
+
+                <a href="sell.html">Sell Equipment</a>
+
+                <a href="wanted.html">Wanted</a>
+
+                <a href="how-it-works.html">How It Works</a>
+
+                <a href="contact.html">Contact</a>
+
+            </nav>
+
+        </div>
 
     </header>
 
 
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
     <main>
 
-        <section>
+        <section class="hero">
 
-            <h2>Buy. Sell. Source. Broker.</h2>
+            <div class="container hero-content">
 
-            <p>
-                A marketplace for specialized equipment
-                across Atlantic Canada.
-            </p>
+                <div class="hero-text">
 
-            <a href="browse.html">
-                Browse Equipment
-            </a>
+                    <p class="eyebrow">
+                        ATLANTIC CANADA EQUIPMENT MARKETPLACE
+                    </p>
 
-            <a href="sell.html">
-                Sell Equipment
-            </a>
+                    <h1>
+                        Buy. Sell. Source.<br>
+                        <span>Specialized Equipment.</span>
+                    </h1>
+
+                    <p class="hero-description">
+
+                        A local marketplace for buying, selling and
+                        sourcing specialized equipment across Nova Scotia,
+                        New Brunswick, Prince Edward Island and Newfoundland
+                        & Labrador.
+
+                    </p>
+
+
+                    <div class="hero-buttons">
+
+                        <a href="browse.html"
+                           class="button button-primary">
+
+                            Browse Equipment
+
+                        </a>
+
+
+                        <a href="sell.html"
+                           class="button button-secondary">
+
+                            Sell Equipment
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </section>
 
 
-        <section>
 
-            <h2>What We Trade</h2>
+        <!-- =====================================================
+             SEARCH
+        ====================================================== -->
 
-            <ul>
-                <li>Marine Equipment</li>
-                <li>Surveying Equipment</li>
-                <li>Geotechnical Equipment</li>
-                <li>Environmental Equipment</li>
-                <li>Industrial Equipment</li>
-                <li>Scientific Equipment</li>
-            </ul>
+        <section class="search-section">
+
+            <div class="container">
+
+                <div class="search-box">
+
+                    <h2>
+                        What are you looking for?
+                    </h2>
+
+
+                    <form class="search-form"
+                          action="browse.html"
+                          method="get">
+
+                        <input
+                            type="search"
+                            name="search"
+                            placeholder="Search equipment, manufacturer or model..."
+                            aria-label="Search equipment">
+
+
+                        <select name="category"
+                                aria-label="Equipment category">
+
+                            <option value="">
+                                All Categories
+                            </option>
+
+                            <option value="marine">
+                                Marine Equipment
+                            </option>
+
+                            <option value="surveying">
+                                Surveying Equipment
+                            </option>
+
+                            <option value="geotechnical">
+                                Geotechnical Equipment
+                            </option>
+
+                            <option value="environmental">
+                                Environmental Equipment
+                            </option>
+
+                            <option value="industrial">
+                                Industrial Equipment
+                            </option>
+
+                            <option value="scientific">
+                                Scientific Equipment
+                            </option>
+
+                        </select>
+
+
+                        <button type="submit"
+                                class="button button-primary">
+
+                            Search
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
 
         </section>
 
 
-        <section>
 
-            <h2>Looking for Something?</h2>
+        <!-- =====================================================
+             CATEGORIES
+        ====================================================== -->
 
-            <p>
-                Tell us what equipment you need and
-                we will help you find it.
-            </p>
+        <section class="categories-section">
 
-            <a href="wanted.html">
-                Submit a Wanted Request
-            </a>
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">
+                        EXPLORE
+                    </p>
+
+                    <h2>
+                        Equipment Categories
+                    </h2>
+
+                    <p>
+                        Find specialized equipment from sellers
+                        across Atlantic Canada.
+                    </p>
+
+                </div>
+
+
+                <div class="category-grid">
+
+
+                    <a href="browse.html?category=marine"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            ⚓
+                        </div>
+
+                        <h3>
+                            Marine
+                        </h3>
+
+                        <p>
+                            Marine electronics, survey equipment,
+                            navigation and vessel equipment.
+                        </p>
+
+                    </a>
+
+
+
+                    <a href="browse.html?category=surveying"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            📐
+                        </div>
+
+                        <h3>
+                            Surveying
+                        </h3>
+
+                        <p>
+                            GNSS, total stations, levels and
+                            surveying accessories.
+                        </p>
+
+                    </a>
+
+
+
+                    <a href="browse.html?category=geotechnical"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            ◉
+                        </div>
+
+                        <h3>
+                            Geotechnical
+                        </h3>
+
+                        <p>
+                            CPT, drilling, soil testing and
+                            geotechnical equipment.
+                        </p>
+
+                    </a>
+
+
+
+                    <a href="browse.html?category=environmental"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            🌱
+                        </div>
+
+                        <h3>
+                            Environmental
+                        </h3>
+
+                        <p>
+                            Environmental monitoring,
+                            sampling and field equipment.
+                        </p>
+
+                    </a>
+
+
+
+                    <a href="browse.html?category=industrial"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            ⚙
+                        </div>
+
+                        <h3>
+                            Industrial
+                        </h3>
+
+                        <p>
+                            Industrial tools, machinery,
+                            instrumentation and equipment.
+                        </p>
+
+                    </a>
+
+
+
+                    <a href="browse.html?category=scientific"
+                       class="category-card">
+
+                        <div class="category-icon">
+                            🔬
+                        </div>
+
+                        <h3>
+                            Scientific
+                        </h3>
+
+                        <p>
+                            Laboratory, research and
+                            scientific instrumentation.
+                        </p>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             HOW IT WORKS
+        ====================================================== -->
+
+        <section class="process-section">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <p class="eyebrow">
+                        SIMPLE PROCESS
+                    </p>
+
+                    <h2>
+                        Buy or Sell With Confidence
+                    </h2>
+
+                </div>
+
+
+                <div class="process-grid">
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            01
+                        </div>
+
+                        <h3>
+                            Find or List Equipment
+                        </h3>
+
+                        <p>
+                            Browse available equipment or submit
+                            equipment you want to sell.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            02
+                        </div>
+
+                        <h3>
+                            Connect
+                        </h3>
+
+                        <p>
+                            Connect with buyers and sellers
+                            throughout Atlantic Canada.
+                        </p>
+
+                    </div>
+
+
+
+                    <div class="process-card">
+
+                        <div class="process-number">
+                            03
+                        </div>
+
+                        <h3>
+                            Complete the Deal
+                        </h3>
+
+                        <p>
+                            Arrange the transaction directly or
+                            use our brokerage service.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             WANTED EQUIPMENT
+        ====================================================== -->
+
+        <section class="wanted-section">
+
+            <div class="container">
+
+                <div class="wanted-content">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            CAN'T FIND WHAT YOU NEED?
+                        </p>
+
+                        <h2>
+                            Tell Us What You're Looking For
+                        </h2>
+
+                        <p>
+                            Submit a wanted equipment request and
+                            we'll help you locate it through our
+                            network of sellers and equipment owners.
+                        </p>
+
+                    </div>
+
+
+                    <a href="wanted.html"
+                       class="button button-primary">
+
+                        Submit a Wanted Request
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================================
+             SELL CTA
+        ====================================================== -->
+
+        <section class="sell-section">
+
+            <div class="container">
+
+                <div class="sell-content">
+
+                    <p class="eyebrow">
+                        HAVE EQUIPMENT TO SELL?
+                    </p>
+
+                    <h2>
+                        Turn Unused Equipment Into Value
+                    </h2>
+
+                    <p>
+                        List your specialized equipment with
+                        Atlantic Equipment Exchange and reach
+                        potential buyers across Atlantic Canada.
+                    </p>
+
+                    <a href="sell.html"
+                       class="button button-secondary">
+
+                        List Your Equipment
+
+                    </a>
+
+                </div>
+
+            </div>
 
         </section>
 
     </main>
 
 
-    <footer>
 
-        <p>
-            © 2026 Atlantic Equipment Exchange
-        </p>
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-grid">
+
+
+            <div>
+
+                <h3>
+                    Atlantic Equipment Exchange
+                </h3>
+
+                <p>
+                    Buy, sell, source and broker specialized
+                    equipment across Atlantic Canada.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Marketplace
+                </h4>
+
+                <a href="browse.html">
+                    Browse Equipment
+                </a>
+
+                <a href="sell.html">
+                    Sell Equipment
+                </a>
+
+                <a href="wanted.html">
+                    Wanted Equipment
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Information
+                </h4>
+
+                <a href="how-it-works.html">
+                    How It Works
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="container footer-bottom">
+
+            <p>
+                © 2026 Atlantic Equipment Exchange.
+                All rights reserved.
+            </p>
+
+        </div>
 
     </footer>
+
 
 </body>
 
