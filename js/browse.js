@@ -306,7 +306,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.createElement("a");
 
         viewLink.href =
-            "#";
+            "listing.html?id=" +
+            encodeURIComponent(listing.id);
 
         viewLink.textContent =
             "View";
