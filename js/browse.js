@@ -157,15 +157,59 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         // =================================================
-        // CARD CONTENT
+        // LISTING IMAGE
         // =================================================
 
-        const title =
-            document.createElement("h3");
+        const imageContainer =
+            document.createElement("div");
 
-        title.textContent =
-            listing.title || "Untitled equipment";
+        imageContainer.className =
+            "listing-image";
 
+
+        const placeholderImage =
+            document.createElement("div");
+
+        placeholderImage.className =
+            "placeholder-image";
+
+        placeholderImage.textContent =
+            (listing.category || "EQUIPMENT")
+                .toUpperCase() +
+            " EQUIPMENT";
+
+
+        const badge =
+            document.createElement("span");
+
+        badge.className =
+            "listing-badge";
+
+        badge.textContent =
+            listing.condition || "Used";
+
+
+        imageContainer.appendChild(
+            placeholderImage
+        );
+
+        imageContainer.appendChild(
+            badge
+        );
+
+
+        // =================================================
+        // LISTING CONTENT
+        // =================================================
+
+        const content =
+            document.createElement("div");
+
+        content.className =
+            "listing-content";
+
+
+        // CATEGORY
 
         const category =
             document.createElement("p");
@@ -174,18 +218,23 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-category";
 
         category.textContent =
-            listing.category || "Uncategorized";
+            (
+                listing.category ||
+                "Equipment"
+            ).toUpperCase();
 
 
-        const condition =
-            document.createElement("p");
+        // TITLE
 
-        condition.className =
-            "listing-condition";
+        const title =
+            document.createElement("h2");
 
-        condition.textContent =
-            listing.condition || "Condition not specified";
+        title.textContent =
+            listing.title ||
+            "Untitled Equipment";
 
+
+        // DESCRIPTION
 
         const description =
             document.createElement("p");
@@ -194,20 +243,50 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-description";
 
         description.textContent =
-            listing.description || "";
+            listing.description ||
+            "No description provided.";
+
+
+        // =================================================
+        // LISTING DETAILS
+        // =================================================
+
+        const details =
+            document.createElement("div");
+
+        details.className =
+            "listing-details";
 
 
         const location =
-            document.createElement("p");
-
-        location.className =
-            "listing-location";
+            document.createElement("span");
 
         location.textContent =
             [listing.city, listing.province]
                 .filter(Boolean)
                 .join(", ");
 
+
+        const condition =
+            document.createElement("span");
+
+        condition.textContent =
+            listing.condition ||
+            "Condition not specified";
+
+
+        details.appendChild(
+            location
+        );
+
+        details.appendChild(
+            condition
+        );
+
+
+        // =================================================
+        // LISTING FOOTER
+        // =================================================
 
         const footer =
             document.createElement("div");
@@ -223,24 +302,57 @@ document.addEventListener("DOMContentLoaded", async function () {
             formatPrice(listing.price);
 
 
-        footer.appendChild(price);
+        const viewLink =
+            document.createElement("a");
+
+        viewLink.href =
+            "#";
+
+        viewLink.textContent =
+            "View";
 
 
-        card.appendChild(title);
+        footer.appendChild(
+            price
+        );
 
-        card.appendChild(category);
+        footer.appendChild(
+            viewLink
+        );
 
-        card.appendChild(condition);
 
-        if (listing.description) {
+        // =================================================
+        // ASSEMBLE CARD
+        // =================================================
 
-            card.appendChild(description);
+        content.appendChild(
+            category
+        );
 
-        }
+        content.appendChild(
+            title
+        );
 
-        card.appendChild(location);
+        content.appendChild(
+            description
+        );
 
-        card.appendChild(footer);
+        content.appendChild(
+            details
+        );
+
+        content.appendChild(
+            footer
+        );
+
+
+        card.appendChild(
+            imageContainer
+        );
+
+        card.appendChild(
+            content
+        );
 
 
         return card;
