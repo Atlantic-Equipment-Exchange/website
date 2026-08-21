@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Equipment Listing | Atlantic Equipment Exchange</title>
+
+    <meta name="description"
+          content="View equipment details on Atlantic Equipment Exchange.">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <a href="index.html" class="logo">
+                Atlantic Equipment Exchange
+            </a>
+
+
+            <nav class="main-nav">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a href="browse.html">
+                    Browse Equipment
+                </a>
+
+                <a href="sell.html">
+                    Sell Equipment
+                </a>
+
+                <a href="wanted.html">
+                    Wanted
+                </a>
+
+                <a href="how-it-works.html">
+                    How It Works
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         LISTING DETAILS
+    ====================================================== -->
+
+    <main>
+
+        <section class="page-header">
+
+            <div class="container">
+
+                <p class="eyebrow">
+                    EQUIPMENT LISTING
+                </p>
+
+                <h1 id="listing-title">
+                    Loading listing...
+                </h1>
+
+                <p id="listing-subtitle">
+                    Please wait while we retrieve the equipment details.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="browse-section">
+
+            <div class="container">
+
+                <!-- =================================================
+                     LOADING MESSAGE
+                ================================================== -->
+
+                <div id="listing-loading">
+
+                    <p>
+                        Loading equipment details...
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ERROR MESSAGE
+                ================================================== -->
+
+                <div id="listing-error"
+                     style="display: none;">
+
+                    <h2>
+                        Listing unavailable
+                    </h2>
+
+                    <p id="listing-error-text">
+                        We could not find this equipment listing.
+                    </p>
+
+                    <p>
+                        <a href="browse.html">
+                            Return to Browse Equipment
+                        </a>
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     LISTING CONTENT
+                ================================================== -->
+
+                <article id="listing-details"
+                         style="display: none;">
+
+                    <div class="listing-card">
+
+                        <div class="listing-image">
+
+                            <div class="placeholder-image"
+                                 id="listing-image-placeholder">
+
+                                EQUIPMENT
+
+                            </div>
+
+                            <span class="listing-badge"
+                                  id="listing-condition-badge">
+
+                                Used
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="listing-content">
+
+                            <p class="listing-category"
+                               id="listing-category">
+
+                                EQUIPMENT
+
+                            </p>
+
+
+                            <h2 id="listing-title-main">
+
+                                Equipment
+
+                            </h2>
+
+
+                            <p class="listing-description"
+                               id="listing-description">
+
+                            </p>
+
+
+                            <div class="listing-details">
+
+                                <span id="listing-location">
+                                    Location
+                                </span>
+
+                                <span id="listing-condition">
+                                    Condition
+                                </span>
+
+                            </div>
+
+
+                            <div class="listing-footer">
+
+                                <strong id="listing-price">
+                                    Price on request
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CONTACT SECTION
+                    ================================================== -->
+
+                    <div style="margin-top: 30px;">
+
+                        <h2>
+                            Interested in this equipment?
+                        </h2>
+
+                        <p>
+                            Contact Atlantic Equipment Exchange
+                            to enquire about this listing.
+                        </p>
+
+                        <a href="contact.html">
+                            Contact Us
+                        </a>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         BACK TO BROWSE
+                    ================================================== -->
+
+                    <div style="margin-top: 25px;">
+
+                        <a href="browse.html">
+                            ← Back to Browse Equipment
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-grid">
+
+            <div>
+
+                <h3>
+                    Atlantic Equipment Exchange
+                </h3>
+
+                <p>
+                    Buy, sell, source and broker specialized
+                    equipment across Atlantic Canada.
+                </p>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Marketplace
+                </h4>
+
+                <a href="browse.html">
+                    Browse Equipment
+                </a>
+
+                <a href="sell.html">
+                    Sell Equipment
+                </a>
+
+                <a href="wanted.html">
+                    Wanted Equipment
+                </a>
+
+            </div>
+
+
+            <div>
+
+                <h4>
+                    Information
+                </h4>
+
+                <a href="how-it-works.html">
+                    How It Works
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="container footer-bottom">
+
+            <p>
+                © 2026 Atlantic Equipment Exchange.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         SUPABASE
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase-config.js"></script>
+
+    <script src="js/listing.js"></script>
+
+
+</body>
+
+</html>
