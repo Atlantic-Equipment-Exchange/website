@@ -1,4 +1,19 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
+
+    // =====================================================
+    // SUPABASE CLIENT
+    // =====================================================
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_PUBLISHABLE_KEY
+        );
+
+
+    // =====================================================
+    // PAGE ELEMENTS
+    // =====================================================
 
     const searchInput =
         document.getElementById("equipment-search");
@@ -21,10 +36,258 @@ document.addEventListener("DOMContentLoaded", function () {
     const listingHeader =
         document.querySelector(".listing-header p");
 
-    const listings =
-        Array.from(
-            document.querySelectorAll(".listing-card")
-        );
+
+    // =====================================================
+    // STORE DATABASE LISTINGS
+    // =====================================================
+
+    let listings = [];
+
+
+    // =====================================================
+    // LOAD PUBLISHED LISTINGS FROM SUPABASE
+    // =====================================================
+
+    async function loadListings() {
+
+        listingGrid.innerHTML = `
+            <div class="loading-message">
+                <p>Loading equipment listings...</p>
+            </div>
+        `;
+
+
+        const { data, error } =
+            await supabaseClient.rpc(
+                "get_published_equipment"
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Error loading equipment listings:",
+                error
+            );
+
+
+            listingGrid.innerHTML = `
+                <div class="no-results-message">
+                    <h2>Unable to load listings</h2>
+
+                    <p>
+                        We are currently unable to retrieve
+                        equipment listings. Please try again later.
+                    </p>
+                </div>
+            `;
+
+            updateListingCount(0);
+
+            return;
+
+        }
+
+
+        listings = data || [];
+
+
+        renderListings();
+
+    }
+
+
+    // =====================================================
+    // RENDER LISTINGS
+    // =====================================================
+
+    function renderListings() {
+
+        listingGrid.innerHTML = "";
+
+
+        if (listings.length === 0) {
+
+            updateListingCount(0);
+
+            showNoResultsMessage(0);
+
+            return;
+
+        }
+
+
+        listings.forEach(function (listing) {
+
+            const card =
+                createListingCard(listing);
+
+            listingGrid.appendChild(card);
+
+        });
+
+
+        updateListingCount(listings.length);
+
+        filterListings();
+
+    }
+
+
+    // =====================================================
+    // CREATE LISTING CARD
+    // =====================================================
+
+    function createListingCard(listing) {
+
+        const card =
+            document.createElement("article");
+
+
+        card.className =
+            "listing-card";
+
+
+        card.dataset.category =
+            (listing.category || "").toLowerCase();
+
+
+        card.dataset.location =
+            (listing.city || "").toLowerCase();
+
+
+        // =================================================
+        // CARD CONTENT
+        // =================================================
+
+        const title =
+            document.createElement("h3");
+
+        title.textContent =
+            listing.title || "Untitled equipment";
+
+
+        const category =
+            document.createElement("p");
+
+        category.className =
+            "listing-category";
+
+        category.textContent =
+            listing.category || "Uncategorized";
+
+
+        const condition =
+            document.createElement("p");
+
+        condition.className =
+            "listing-condition";
+
+        condition.textContent =
+            listing.condition || "Condition not specified";
+
+
+        const description =
+            document.createElement("p");
+
+        description.className =
+            "listing-description";
+
+        description.textContent =
+            listing.description || "";
+
+
+        const location =
+            document.createElement("p");
+
+        location.className =
+            "listing-location";
+
+        location.textContent =
+            [listing.city, listing.province]
+                .filter(Boolean)
+                .join(", ");
+
+
+        const footer =
+            document.createElement("div");
+
+        footer.className =
+            "listing-footer";
+
+
+        const price =
+            document.createElement("strong");
+
+        price.textContent =
+            formatPrice(listing.price);
+
+
+        footer.appendChild(price);
+
+
+        card.appendChild(title);
+
+        card.appendChild(category);
+
+        card.appendChild(condition);
+
+        if (listing.description) {
+
+            card.appendChild(description);
+
+        }
+
+        card.appendChild(location);
+
+        card.appendChild(footer);
+
+
+        return card;
+
+    }
+
+
+    // =====================================================
+    // FORMAT PRICE
+    // =====================================================
+
+    function formatPrice(price) {
+
+        if (
+            price === null ||
+            price === undefined ||
+            price === ""
+        ) {
+
+            return "Price on request";
+
+        }
+
+
+        const numericPrice =
+            Number(price);
+
+
+        if (
+            Number.isNaN(numericPrice)
+        ) {
+
+            return "Price on request";
+
+        }
+
+
+        return new Intl.NumberFormat(
+            "en-CA",
+            {
+                style: "currency",
+                currency: "CAD",
+                maximumFractionDigits: 0
+            }
+        ).format(numericPrice);
+
+    }
 
 
     // =====================================================
@@ -34,27 +297,48 @@ document.addEventListener("DOMContentLoaded", function () {
     function filterListings() {
 
         const searchTerm =
-            searchInput.value.trim().toLowerCase();
+            searchInput.value
+                .trim()
+                .toLowerCase();
+
 
         const selectedCategory =
-            categoryFilter.value.toLowerCase();
+            categoryFilter.value
+                .toLowerCase();
+
 
         const selectedLocation =
-            locationFilter.value.toLowerCase();
+            locationFilter.value
+                .toLowerCase();
+
 
         let visibleCount = 0;
 
 
-        listings.forEach(function (listing) {
+        const listingCards =
+            Array.from(
+                document.querySelectorAll(
+                    ".listing-card"
+                )
+            );
+
+
+        listingCards.forEach(function (listing) {
 
             const listingText =
                 listing.textContent.toLowerCase();
 
+
             const listingCategory =
-                listing.dataset.category.toLowerCase();
+                (
+                    listing.dataset.category || ""
+                ).toLowerCase();
+
 
             const listingLocation =
-                listing.dataset.location.toLowerCase();
+                (
+                    listing.dataset.location || ""
+                ).toLowerCase();
 
 
             const matchesSearch =
@@ -108,6 +392,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateListingCount(count) {
 
+        if (!listingHeader) {
+            return;
+        }
+
+
         if (count === 1) {
 
             listingHeader.innerHTML =
@@ -131,11 +420,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateClearButton() {
 
+        if (!clearFiltersButton) {
+            return;
+        }
+
+
         const hasSearch =
             searchInput.value.trim() !== "";
 
+
         const hasCategory =
             categoryFilter.value !== "all";
+
 
         const hasLocation =
             locationFilter.value !== "all";
@@ -228,7 +524,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =====================================================
-    // GET PRICE
+    // GET PRICE FROM CARD
     // =====================================================
 
     function getPrice(listing) {
@@ -255,7 +551,9 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
-        return parseFloat(numericPrice) || 0;
+        return parseFloat(
+            numericPrice
+        ) || 0;
 
     }
 
@@ -270,8 +568,16 @@ document.addEventListener("DOMContentLoaded", function () {
             sortListings.value;
 
 
+        const listingCards =
+            Array.from(
+                document.querySelectorAll(
+                    ".listing-card"
+                )
+            );
+
+
         let sortedListings =
-            [...listings];
+            [...listingCards];
 
 
         if (sortValue === "price-low") {
@@ -279,7 +585,10 @@ document.addEventListener("DOMContentLoaded", function () {
             sortedListings.sort(
                 function (a, b) {
 
-                    return getPrice(a) - getPrice(b);
+                    return (
+                        getPrice(a) -
+                        getPrice(b)
+                    );
 
                 }
             );
@@ -292,7 +601,10 @@ document.addEventListener("DOMContentLoaded", function () {
             sortedListings.sort(
                 function (a, b) {
 
-                    return getPrice(b) - getPrice(a);
+                    return (
+                        getPrice(b) -
+                        getPrice(a)
+                    );
 
                 }
             );
@@ -303,7 +615,9 @@ document.addEventListener("DOMContentLoaded", function () {
         sortedListings.forEach(
             function (listing) {
 
-                listingGrid.appendChild(listing);
+                listingGrid.appendChild(
+                    listing
+                );
 
             }
         );
@@ -352,8 +666,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // INITIAL STATE
     // =====================================================
 
-    clearFiltersButton.style.display = "none";
+    clearFiltersButton.style.display =
+        "none";
 
-    filterListings();
+
+    // =====================================================
+    // LOAD DATABASE LISTINGS
+    // =====================================================
+
+    await loadListings();
 
 });
