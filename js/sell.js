@@ -297,7 +297,134 @@ document.addEventListener("DOMContentLoaded", function () {
                 data
             );
 
+            // =============================================
+            // UPLOAD EQUIPMENT PHOTOS
+            // =============================================
 
+            if (selectedImages.length > 0) {
+
+                for (
+                    let i = 0;
+                    i < selectedImages.length;
+                    i++
+                ) {
+
+                    const image =
+                        selectedImages[i];
+
+
+                    const fileExtension =
+                        image.name
+                            .split(".")
+                            .pop()
+                            .toLowerCase();
+
+
+                    const fileName =
+                        "photo-" +
+                        (i + 1) +
+                        "-" +
+                        Date.now() +
+                        "." +
+                        fileExtension;
+
+
+                    const filePath =
+                        "listing-" +
+                        data +
+                        "/" +
+                        fileName;
+
+
+                    // -----------------------------------------
+                    // UPLOAD IMAGE TO SUPABASE STORAGE
+                    // -----------------------------------------
+
+                    const {
+                        error: uploadError
+                    } =
+                        await supabaseClient
+                            .storage
+                            .from("equipment-images")
+                            .upload(
+                                filePath,
+                                image,
+                                {
+                                    cacheControl: "3600",
+                                    upsert: false
+                                }
+                            );
+
+
+                    if (uploadError) {
+
+                        console.error(
+                            "Image upload error:",
+                            uploadError
+                        );
+
+                        alert(
+                            "Your listing was submitted, but one or more photos could not be uploaded."
+                        );
+
+                        break;
+
+                    }
+
+
+                    // -----------------------------------------
+                    // GET PUBLIC IMAGE URL
+                    // -----------------------------------------
+
+                    const {
+                        data: publicUrlData
+                    } =
+                        supabaseClient
+                            .storage
+                            .from("equipment-images")
+                            .getPublicUrl(
+                                filePath
+                            );
+
+
+                    const imageUrl =
+                        publicUrlData.publicUrl;
+
+
+                    // -----------------------------------------
+                    // SAVE IMAGE RECORD
+                    // -----------------------------------------
+
+                    const {
+                        error: imageRecordError
+                    } =
+                        await supabaseClient
+                            .from("equipment_images")
+                            .insert({
+                                listing_id: data,
+                                image_url: imageUrl
+                            });
+
+
+                    if (imageRecordError) {
+
+                        console.error(
+                            "Image record error:",
+                            imageRecordError
+                        );
+
+                        alert(
+                            "Your listing was submitted, but one or more photo records could not be saved."
+                        );
+
+                        break;
+
+                    }
+
+                }
+
+            }
+            
             alert(
                 "Thank you! Your equipment listing has been submitted for review."
             );
