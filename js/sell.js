@@ -138,8 +138,79 @@ document.addEventListener("DOMContentLoaded", function () {
                     .getElementById("seller-phone")
                     .value
                     .trim();
+            // =============================================
+            // GET EQUIPMENT PHOTOS
+            // =============================================
+
+            const imageInput =
+                document.getElementById("equipment-images");
+
+            const selectedImages =
+                imageInput ? Array.from(imageInput.files) : [];
+           // =============================================
+            // VALIDATE EQUIPMENT PHOTOS
+            // =============================================
+
+            if (selectedImages.length > 5) {
+
+                alert(
+                    "Please select no more than 5 photos."
+                );
+
+                submitButton.disabled = false;
+
+                submitButton.textContent =
+                    originalButtonText;
+
+                return;
+
+            }
 
 
+            const maxImageSize =
+                5 * 1024 * 1024;
+
+            const allowedImageTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            for (const image of selectedImages) {
+
+                if (!allowedImageTypes.includes(image.type)) {
+
+                    alert(
+                        "Only JPG, PNG and WEBP images are allowed."
+                    );
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent =
+                        originalButtonText;
+
+                    return;
+
+                }
+
+
+                if (image.size > maxImageSize) {
+
+                    alert(
+                        "Each photo must be 5 MB or smaller."
+                    );
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent =
+                        originalButtonText;
+
+                    return;
+
+                }
+
+            }
             // =============================================
             // BASIC PRICE VALIDATION
             // =============================================
