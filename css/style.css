@@ -874,22 +874,91 @@ body {
     letter-spacing: 0.08em;
 }
 
+/* =========================================================
+   LISTING IMAGE GALLERY
+========================================================= */
+
 .listing-image-gallery {
     width: 100%;
+
     height: 100%;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     overflow: hidden;
+
     background: #dfe7ec;
 }
 
+
 .listing-gallery-image {
     display: block;
+
     width: 100%;
+
     height: 100%;
+
     object-fit: contain;
+
     background: #dfe7ec;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   LISTING PHOTO THUMBNAILS
+========================================================= */
+
+.listing-photo-thumbnails {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 12px;
+
+    overflow-x: auto;
+}
+
+
+.listing-photo-thumbnail {
+    flex: 0 0 80px;
+
+    width: 80px;
+
+    height: 60px;
+
+    padding: 0;
+
+    border: 2px solid transparent;
+
+    border-radius: 5px;
+
+    background: #dfe7ec;
+
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+
+.listing-photo-thumbnail img {
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.listing-photo-thumbnail.active {
+    border-color: #174b69;
 }
 
 .listing-badge {
