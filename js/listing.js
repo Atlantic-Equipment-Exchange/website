@@ -337,7 +337,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         }
 
-
+        console.log(
+            "Images returned for listing:",
+            numericListingId,
+            images
+        );
         if (
             !images ||
             images.length === 0
