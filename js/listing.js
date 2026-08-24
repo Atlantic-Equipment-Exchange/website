@@ -85,6 +85,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-image-placeholder"
         );
 
+    const listingPhotoThumbnails =
+        document.getElementById(
+            "listing-photo-thumbnails"
+        );
+    
     const listingImageGallery =
         document.getElementById(
             "listing-image-gallery"
@@ -302,88 +307,199 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     async function loadListingImages() {
 
-        if (!listingImageGallery) {
-            return;
-        }
+    if (!listingImageGallery) {
+        return;
+    }
 
 
-        const {
-            data: images,
+    const {
+        data: images,
+        error
+    } =
+        await supabaseClient
+            .from("equipment_images")
+            .select("image_url")
+            .eq(
+                "listing_id",
+                numericListingId
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Error loading listing images:",
             error
-        } =
-            await supabaseClient
-                .from("equipment_images")
-                .select("image_url")
-                .eq(
-                    "listing_id",
-                    numericListingId
-                )
-                .order(
-                    "created_at",
-                    {
-                        ascending: true
+        );
+
+        return;
+
+    }
+
+
+    console.log(
+        "Images returned for listing:",
+        numericListingId,
+        images
+    );
+
+
+    if (
+        !images ||
+        images.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+     * =====================================================
+     * MAIN IMAGE
+     * =====================================================
+     */
+
+    listingImageGallery.innerHTML = "";
+
+
+    const mainImage =
+        document.createElement("img");
+
+
+    mainImage.src =
+        images[0].image_url;
+
+
+    mainImage.alt =
+        "Equipment photograph";
+
+
+    mainImage.className =
+        "listing-gallery-image";
+
+
+    mainImage.loading =
+        "eager";
+
+
+    listingImageGallery.appendChild(
+        mainImage
+    );
+
+
+    /*
+     * =====================================================
+     * THUMBNAILS
+     * =====================================================
+     */
+
+    if (
+        listingPhotoThumbnails
+    ) {
+
+        listingPhotoThumbnails.innerHTML =
+            "";
+
+
+        images.forEach(
+            function (
+                image,
+                index
+            ) {
+
+                const thumbnailButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                thumbnailButton.type =
+                    "button";
+
+
+                thumbnailButton.className =
+                    "listing-photo-thumbnail";
+
+
+                if (index === 0) {
+
+                    thumbnailButton.classList.add(
+                        "active"
+                    );
+
+                }
+
+
+                const thumbnailImage =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                thumbnailImage.src =
+                    image.image_url;
+
+
+                thumbnailImage.alt =
+                    "Equipment photograph " +
+                    (index + 1);
+
+
+                thumbnailButton.appendChild(
+                    thumbnailImage
+                );
+
+
+                thumbnailButton.addEventListener(
+                    "click",
+                    function () {
+
+                        mainImage.src =
+                            image.image_url;
+
+
+                        document
+                            .querySelectorAll(
+                                ".listing-photo-thumbnail"
+                            )
+                            .forEach(
+                                function (
+                                    button
+                                ) {
+
+                                    button.classList.remove(
+                                        "active"
+                                    );
+
+                                }
+                            );
+
+
+                        thumbnailButton.classList.add(
+                            "active"
+                        );
+
                     }
                 );
 
 
-        if (error) {
+                listingPhotoThumbnails.appendChild(
+                    thumbnailButton
+                );
 
-            console.error(
-                "Error loading listing images:",
-                error
-            );
-
-            return;
-
-        }
-
-        console.log(
-            "Images returned for listing:",
-            numericListingId,
-            images
+            }
         );
-        if (
-            !images ||
-            images.length === 0
-        ) {
-
-            return;
-
-        }
-
-
-        listingImageGallery.innerHTML = "";
-
-
-        images.forEach(function (image) {
-
-            const imageElement =
-                document.createElement("img");
-
-
-            imageElement.src =
-                image.image_url;
-
-
-            imageElement.alt =
-                "Equipment photograph";
-
-
-            imageElement.loading =
-                "lazy";
-
-
-            imageElement.className =
-                "listing-gallery-image";
-
-
-            listingImageGallery.appendChild(
-                imageElement
-            );
-
-        });
 
     }
+
+}
 
     // =====================================================
     // FORMAT PRICE
@@ -464,5 +580,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // =====================================================
 
     await loadListing();
+
+    await loadListingImages();
 
 });
