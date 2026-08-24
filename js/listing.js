@@ -85,6 +85,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-image-placeholder"
         );
 
+    const listingImageGallery =
+        document.getElementById(
+            "listing-image-gallery"
+        );
 
     // =====================================================
     // GET LISTING ID FROM URL
@@ -189,6 +193,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             data[0]
         );
 
+        await loadListingImages();
     }
 
 
@@ -291,6 +296,90 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     }
 
+    // =====================================================
+    // LOAD LISTING IMAGES
+    // =====================================================
+
+    async function loadListingImages() {
+
+        if (!listingImageGallery) {
+            return;
+        }
+
+
+        const {
+            data: images,
+            error
+        } =
+            await supabaseClient
+                .from("equipment_images")
+                .select("image_url")
+                .eq(
+                    "listing_id",
+                    numericListingId
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (error) {
+
+            console.error(
+                "Error loading listing images:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !images ||
+            images.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        listingImageGallery.innerHTML = "";
+
+
+        images.forEach(function (image) {
+
+            const imageElement =
+                document.createElement("img");
+
+
+            imageElement.src =
+                image.image_url;
+
+
+            imageElement.alt =
+                "Equipment photograph";
+
+
+            imageElement.loading =
+                "lazy";
+
+
+            imageElement.className =
+                "listing-gallery-image";
+
+
+            listingImageGallery.appendChild(
+                imageElement
+            );
+
+        });
+
+    }
 
     // =====================================================
     // FORMAT PRICE
