@@ -138,24 +138,49 @@ document.addEventListener("DOMContentLoaded", function () {
                     .getElementById("seller-phone")
                     .value
                     .trim();
+
+
             // =============================================
             // GET EQUIPMENT PHOTOS
             // =============================================
 
             const imageInput =
-                document.getElementById("equipment-images");
+                document.getElementById(
+                    "equipment-images"
+                );
+
 
             const selectedImages =
-                imageInput ? Array.from(imageInput.files) : [];
-           // =============================================
+                imageInput
+                    ? Array.from(imageInput.files)
+                    : [];
+
+
+            // =============================================
             // VALIDATE EQUIPMENT PHOTOS
             // =============================================
 
-            if (selectedImages.length > 5) {
+            const maximumPhotos = 5;
+
+            const maximumImageSize =
+                5 * 1024 * 1024;
+
+            const allowedImageTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            if (
+                selectedImages.length >
+                maximumPhotos
+            ) {
 
                 alert(
                     "Please select no more than 5 photos."
                 );
+
 
                 submitButton.disabled = false;
 
@@ -167,23 +192,20 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            const maxImageSize =
-                5 * 1024 * 1024;
+            for (
+                const image of selectedImages
+            ) {
 
-            const allowedImageTypes = [
-                "image/jpeg",
-                "image/png",
-                "image/webp"
-            ];
-
-
-            for (const image of selectedImages) {
-
-                if (!allowedImageTypes.includes(image.type)) {
+                if (
+                    !allowedImageTypes.includes(
+                        image.type
+                    )
+                ) {
 
                     alert(
                         "Only JPG, PNG and WEBP images are allowed."
                     );
+
 
                     submitButton.disabled = false;
 
@@ -195,11 +217,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                if (image.size > maxImageSize) {
+                if (
+                    image.size >
+                    maximumImageSize
+                ) {
 
                     alert(
                         "Each photo must be 5 MB or smaller."
                     );
+
 
                     submitButton.disabled = false;
 
@@ -211,6 +237,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
             }
+
+
             // =============================================
             // BASIC PRICE VALIDATION
             // =============================================
@@ -224,6 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Please enter a valid asking price."
                 );
 
+
                 submitButton.disabled = false;
 
                 submitButton.textContent =
@@ -235,33 +264,56 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             // =============================================
-            // CALL DATABASE FUNCTION
+            // CREATE DATABASE LISTING
             // =============================================
 
-            const { data, error } =
+            const {
+                data: listingId,
+                error
+            } =
                 await supabaseClient.rpc(
                     "submit_equipment_listing",
                     {
-                        p_title: title,
-                        p_category: category,
-                        p_condition: condition,
-                        p_description: description,
-                        p_price: price,
-                        p_province: province,
-                        p_city: city,
-                        p_seller_name: sellerName,
+                        p_title:
+                            title,
+
+                        p_category:
+                            category,
+
+                        p_condition:
+                            condition,
+
+                        p_description:
+                            description,
+
+                        p_price:
+                            price,
+
+                        p_province:
+                            province,
+
+                        p_city:
+                            city,
+
+                        p_seller_name:
+                            sellerName,
+
                         p_seller_company:
-                            sellerCompany || null,
+                            sellerCompany ||
+                            null,
+
                         p_seller_email:
                             sellerEmail,
+
                         p_seller_phone:
-                            sellerPhone || null
+                            sellerPhone ||
+                            null
                     }
                 );
 
 
             // =============================================
-            // HANDLE ERROR
+            // HANDLE LISTING CREATION ERROR
             // =============================================
 
             if (error) {
@@ -288,20 +340,23 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            // =============================================
-            // SUCCESS
-            // =============================================
-
             console.log(
                 "Listing submitted successfully:",
-                data
+                listingId
             );
+
 
             // =============================================
             // UPLOAD EQUIPMENT PHOTOS
             // =============================================
 
-            if (selectedImages.length > 0) {
+            let photosUploadedSuccessfully =
+                true;
+
+
+            if (
+                selectedImages.length > 0
+            ) {
 
                 for (
                     let i = 0;
@@ -312,6 +367,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     const image =
                         selectedImages[i];
 
+
+                    // -------------------------------------
+                    // CREATE UNIQUE FILE NAME
+                    // -------------------------------------
 
                     const fileExtension =
                         image.name
@@ -331,57 +390,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     const filePath =
                         "listing-" +
-                        data +
+                        listingId +
                         "/" +
                         fileName;
 
 
-                    // -----------------------------------------
-                    // UPLOAD IMAGE TO SUPABASE STORAGE
-                    // -----------------------------------------
+                    // -------------------------------------
+                    // UPLOAD IMAGE
+                    // -------------------------------------
 
                     const {
                         error: uploadError
                     } =
                         await supabaseClient
                             .storage
-                            .from("equipment-images")
+                            .from(
+                                "equipment-images"
+                            )
                             .upload(
                                 filePath,
                                 image,
                                 {
-                                    cacheControl: "3600",
-                                    upsert: false
+                                    cacheControl:
+                                        "3600",
+
+                                    upsert:
+                                        false
                                 }
                             );
 
 
-                    if (uploadError) {
+                    if (
+                        uploadError
+                    ) {
 
                         console.error(
                             "Image upload error:",
                             uploadError
                         );
 
-                        alert(
-                            "Your listing was submitted, but one or more photos could not be uploaded."
-                        );
+
+                        photosUploadedSuccessfully =
+                            false;
+
 
                         break;
 
                     }
 
 
-                    // -----------------------------------------
+                    // -------------------------------------
                     // GET PUBLIC IMAGE URL
-                    // -----------------------------------------
+                    // -------------------------------------
 
                     const {
-                        data: publicUrlData
+                        data:
+                            publicUrlData
                     } =
                         supabaseClient
                             .storage
-                            .from("equipment-images")
+                            .from(
+                                "equipment-images"
+                            )
                             .getPublicUrl(
                                 filePath
                             );
@@ -391,31 +461,40 @@ document.addEventListener("DOMContentLoaded", function () {
                         publicUrlData.publicUrl;
 
 
-                    // -----------------------------------------
+                    // -------------------------------------
                     // SAVE IMAGE RECORD
-                    // -----------------------------------------
+                    // -------------------------------------
 
                     const {
-                        error: imageRecordError
+                        error:
+                            imageRecordError
                     } =
                         await supabaseClient
-                            .from("equipment_images")
+                            .from(
+                                "equipment_images"
+                            )
                             .insert({
-                                listing_id: data,
-                                image_url: imageUrl
+                                listing_id:
+                                    listingId,
+
+                                image_url:
+                                    imageUrl
                             });
 
 
-                    if (imageRecordError) {
+                    if (
+                        imageRecordError
+                    ) {
 
                         console.error(
                             "Image record error:",
                             imageRecordError
                         );
 
-                        alert(
-                            "Your listing was submitted, but one or more photo records could not be saved."
-                        );
+
+                        photosUploadedSuccessfully =
+                            false;
+
 
                         break;
 
@@ -424,13 +503,54 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
             }
-            
+
+
+            // =============================================
+            // HANDLE PHOTO FAILURE
+            // =============================================
+
+            if (
+                !photosUploadedSuccessfully
+            ) {
+
+                alert(
+                    "Your equipment listing was created, " +
+                    "but one or more photographs could not be uploaded. " +
+                    "Please contact Atlantic Equipment Exchange " +
+                    "before submitting the listing again."
+                );
+
+
+                equipmentForm.reset();
+
+                submitButton.disabled = false;
+
+                submitButton.textContent =
+                    originalButtonText;
+
+                return;
+
+            }
+
+
+            // =============================================
+            // COMPLETE SUCCESS
+            // =============================================
+
+            console.log(
+                "Listing and photographs submitted successfully:",
+                listingId
+            );
+
+
             alert(
                 "Thank you! Your equipment listing has been submitted for review."
             );
 
 
-            // Clear form
+            // =============================================
+            // CLEAR FORM
+            // =============================================
 
             equipmentForm.reset();
 
