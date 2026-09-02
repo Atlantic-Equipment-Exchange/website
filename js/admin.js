@@ -251,226 +251,233 @@ document.addEventListener("DOMContentLoaded", async function () {
      */
     async function loadPendingListings() {
 
-        const listingsContainer =
-            document.getElementById(
-                "admin-listings"
-            );
+    const listingsContainer =
+        document.getElementById(
+            "admin-listings"
+        );
 
 
-        listingsContainer.innerHTML =
-            "<p>Loading pending listings...</p>";
+    listingsContainer.innerHTML =
+        "<p>Loading pending listings...</p>";
 
 
-        const {
-            data,
+    /*
+     * Retrieve pending listings through the
+     * administrator-only database function.
+     */
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "get_pending_equipment_listings"
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Pending listings error:",
             error
-        } =
-            await supabaseClient
-                .from("equipment_listings")
-                .select(`
-                    id,
-                    created_at,
-                    title,
-                    category,
-                    condition,
-                    description,
-                    price,
-                    province,
-                    city,
-                    seller_name,
-                    seller_company,
-                    seller_email,
-                    seller_phone,
-                    status
-                `)
-                .eq("status", "pending")
-                .order(
-                    "created_at",
-                    {
-                        ascending: false
-                    }
-                );
+        );
+
+        showAdminError(
+            "We could not load the pending listings."
+        );
+
+        return;
+    }
 
 
-        if (error) {
+    if (!data || data.length === 0) {
 
-            console.error(
-                "Pending listings error:",
-                error
-            );
-
-            showAdminError(
-                "We could not load the pending listings."
-            );
-
-            return;
-        }
-
-
-        if (!data || data.length === 0) {
-
-            listingsContainer.innerHTML = `
-                <div class="listing-card">
-                    <div class="listing-content">
-                        <h3>No pending listings</h3>
-                        <p>
-                            There are currently no equipment
-                            listings awaiting review.
-                        </p>
-                    </div>
-                </div>
-            `;
-
-            return;
-        }
-
-
-        listingsContainer.innerHTML = "";
-
-
-        data.forEach(function (listing) {
-
-            const card =
-                document.createElement("div");
-
-            card.className = "listing-card";
-
-            card.style.marginBottom = "25px";
-
-
-            const submittedDate =
-                listing.created_at
-                    ? new Date(
-                        listing.created_at
-                    ).toLocaleString()
-                    : "Unknown";
-
-
-            const price =
-                listing.price !== null &&
-                listing.price !== undefined
-                    ? Number(
-                        listing.price
-                    ).toLocaleString(
-                        "en-CA",
-                        {
-                            style: "currency",
-                            currency: "CAD"
-                        }
-                    )
-                    : "Price not provided";
-
-
-            card.innerHTML = `
+        listingsContainer.innerHTML = `
+            <div class="listing-card">
                 <div class="listing-content">
 
-                    <p class="listing-category">
-                        ${escapeHtml(
-                            listing.category || "EQUIPMENT"
-                        )}
-                    </p>
-
-                    <h2>
-                        ${escapeHtml(
-                            listing.title || "Untitled listing"
-                        )}
-                    </h2>
+                    <h3>No pending listings</h3>
 
                     <p>
-                        <strong>Status:</strong>
-                        Pending review
+                        There are currently no equipment
+                        listings awaiting review.
                     </p>
-
-                    <p>
-                        <strong>Submitted:</strong>
-                        ${escapeHtml(submittedDate)}
-                    </p>
-
-                    <p>
-                        <strong>Condition:</strong>
-                        ${escapeHtml(
-                            formatCondition(
-                                listing.condition
-                            )
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>Price:</strong>
-                        ${escapeHtml(price)}
-                    </p>
-
-                    <p>
-                        <strong>Location:</strong>
-                        ${escapeHtml(
-                            [listing.city, listing.province]
-                                .filter(Boolean)
-                                .join(", ")
-                        )}
-                    </p>
-
-                    <p>
-                        <strong>Seller:</strong>
-                        ${escapeHtml(
-                            listing.seller_name || ""
-                        )}
-                    </p>
-
-                    ${
-                        listing.seller_company
-                            ? `
-                                <p>
-                                    <strong>Company:</strong>
-                                    ${escapeHtml(
-                                        listing.seller_company
-                                    )}
-                                </p>
-                              `
-                            : ""
-                    }
-
-                    <p>
-                        <strong>Email:</strong>
-                        ${escapeHtml(
-                            listing.seller_email || ""
-                        )}
-                    </p>
-
-                    ${
-                        listing.seller_phone
-                            ? `
-                                <p>
-                                    <strong>Phone:</strong>
-                                    ${escapeHtml(
-                                        listing.seller_phone
-                                    )}
-                                </p>
-                              `
-                            : ""
-                    }
-
-                    ${
-                        listing.description
-                            ? `
-                                <div style="margin-top: 15px;">
-                                    <strong>Description:</strong>
-                                    <p>
-                                        ${escapeHtml(
-                                            listing.description
-                                        )}
-                                    </p>
-                                </div>
-                              `
-                            : ""
-                    }
 
                 </div>
-            `;
+            </div>
+        `;
 
-
-            listingsContainer.appendChild(card);
-        });
+        return;
     }
+
+
+    listingsContainer.innerHTML = "";
+
+
+    data.forEach(function (listing) {
+
+        const card =
+            document.createElement("div");
+
+        card.className = "listing-card";
+
+        card.style.marginBottom = "25px";
+
+
+        const submittedDate =
+            listing.created_at
+                ? new Date(
+                    listing.created_at
+                ).toLocaleString()
+                : "Unknown";
+
+
+        const price =
+            listing.price !== null &&
+            listing.price !== undefined
+                ? Number(
+                    listing.price
+                ).toLocaleString(
+                    "en-CA",
+                    {
+                        style: "currency",
+                        currency: "CAD"
+                    }
+                )
+                : "Price not provided";
+
+
+        const location =
+            [
+                listing.city,
+                listing.province
+            ]
+                .filter(Boolean)
+                .join(", ");
+
+
+        card.innerHTML = `
+            <div class="listing-content">
+
+                <p class="listing-category">
+                    ${escapeHtml(
+                        listing.category ||
+                        "EQUIPMENT"
+                    )}
+                </p>
+
+                <h2>
+                    ${escapeHtml(
+                        listing.title ||
+                        "Untitled listing"
+                    )}
+                </h2>
+
+                <p>
+                    <strong>Status:</strong>
+                    Pending review
+                </p>
+
+                <p>
+                    <strong>Submitted:</strong>
+                    ${escapeHtml(
+                        submittedDate
+                    )}
+                </p>
+
+                <p>
+                    <strong>Condition:</strong>
+                    ${escapeHtml(
+                        formatCondition(
+                            listing.condition
+                        )
+                    )}
+                </p>
+
+                <p>
+                    <strong>Price:</strong>
+                    ${escapeHtml(
+                        price
+                    )}
+                </p>
+
+                <p>
+                    <strong>Location:</strong>
+                    ${escapeHtml(
+                        location
+                    )}
+                </p>
+
+                <p>
+                    <strong>Seller:</strong>
+                    ${escapeHtml(
+                        listing.seller_name ||
+                        ""
+                    )}
+                </p>
+
+                ${
+                    listing.seller_company
+                        ? `
+                            <p>
+                                <strong>Company:</strong>
+                                ${escapeHtml(
+                                    listing.seller_company
+                                )}
+                            </p>
+                          `
+                        : ""
+                }
+
+                <p>
+                    <strong>Email:</strong>
+                    ${escapeHtml(
+                        listing.seller_email ||
+                        ""
+                    )}
+                </p>
+
+                ${
+                    listing.seller_phone
+                        ? `
+                            <p>
+                                <strong>Phone:</strong>
+                                ${escapeHtml(
+                                    listing.seller_phone
+                                )}
+                            </p>
+                          `
+                        : ""
+                }
+
+                ${
+                    listing.description
+                        ? `
+                            <div style="margin-top: 15px;">
+
+                                <strong>
+                                    Description:
+                                </strong>
+
+                                <p>
+                                    ${escapeHtml(
+                                        listing.description
+                                    )}
+                                </p>
+
+                            </div>
+                          `
+                        : ""
+                }
+
+            </div>
+        `;
+
+
+        listingsContainer.appendChild(
+            card
+        );
+    });
+}
 
 
     /*
