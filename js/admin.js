@@ -17,7 +17,16 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const adminErrorText =
         document.getElementById("admin-error-text");
+    const adminUserEmail =
+        document.getElementById("admin-user-email");
 
+    const signOutButton =
+        document.getElementById("admin-sign-out-button");
+
+    const adminActionMessage =
+        document.getElementById(
+            "admin-action-message"
+        );
 
     /*
      * Create the administrator login form.
@@ -78,6 +87,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     const loginMessage =
         document.getElementById("admin-login-message");
 
+    signOutButton.addEventListener(
+        "click",
+        async function () {
+
+            signOutButton.disabled = true;
+            signOutButton.textContent = "Signing Out...";
+
+            const {
+                error
+            } =
+                await supabaseClient.auth.signOut();
+
+            if (error) {
+
+                console.error(
+                    "Administrator sign-out error:",
+                    error
+                );
+
+                signOutButton.disabled = false;
+                signOutButton.textContent = "Sign Out";
+
+                alert(
+                    "Unable to sign out.\n\n" +
+                    error.message
+                );
+
+                return;
+            }
+
+            showLogin();
+
+            loginForm.reset();
+
+            loginMessage.style.display = "none";
+
+            signOutButton.disabled = false;
+            signOutButton.textContent = "Sign Out";
+        }
+    );
 
     /*
      * Check the existing Supabase session.
@@ -229,6 +278,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             "Administrator authorization confirmed."
         );
 
+        adminUserEmail.textContent =
+            "Signed in as " + user.email;
 
         adminLogin.style.display = "none";
         adminError.style.display = "none";
@@ -720,6 +771,11 @@ async function updateListingStatus(
         newStatus
     );
 
+    showActionMessage(
+        newStatus === "published"
+            ? "Listing published successfully."
+            : "Listing rejected successfully."
+    );
 
     /*
      * Reload the pending listings.
@@ -770,6 +826,16 @@ async function updateListingStatus(
     /*
      * Show login screen.
      */
+    function showActionMessage(message) {
+
+        adminActionMessage.textContent =
+            message;
+
+        adminActionMessage.style.display =
+            "block";
+    }
+
+    
     function showLogin() {
 
         adminLogin.style.display = "block";
