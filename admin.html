@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin | Atlantic Equipment Exchange</title>
+
+    <meta name="robots"
+          content="noindex, nofollow">
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="site-header">
+
+        <div class="container header-inner">
+
+            <a href="index.html"
+               class="logo">
+
+                Atlantic Equipment Exchange
+
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         ADMIN PAGE
+    ====================================================== -->
+
+    <main>
+
+        <section class="page-header">
+
+            <div class="container">
+
+                <p class="eyebrow">
+                    ADMINISTRATION
+                </p>
+
+                <h1>
+                    Equipment Listings
+                </h1>
+
+                <p>
+                    Review submitted equipment listings
+                    before publication.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="browse-section">
+
+            <div class="container">
+
+
+                <!-- =================================================
+                     ADMIN LOGIN
+                ================================================== -->
+
+                <div id="admin-login">
+
+                    <h2>
+                        Administrator Access
+                    </h2>
+
+                    <p>
+                        Administrator authentication will be
+                        available here.
+                    </p>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ADMIN DASHBOARD
+                ================================================== -->
+
+                <div id="admin-dashboard"
+                     style="display: none;">
+
+                    <h2>
+                        Pending Listings
+                    </h2>
+
+
+                    <div id="admin-listings">
+
+                        <p>
+                            Loading pending listings...
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ADMIN ERROR
+                ================================================== -->
+
+                <div id="admin-error"
+                     style="display: none;">
+
+                    <h2>
+                        Unable to load listings
+                    </h2>
+
+                    <p id="admin-error-text">
+                        An error occurred while loading
+                        the administration area.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="container footer-bottom">
+
+            <p>
+                © 2026 Atlantic Equipment Exchange.
+                All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         SUPABASE
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase-config.js"></script>
+
+    <script src="js/admin.js"></script>
+
+
+</body>
+
+</html>
