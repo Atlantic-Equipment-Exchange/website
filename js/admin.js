@@ -313,8 +313,25 @@ document.addEventListener("DOMContentLoaded", async function () {
     listingsContainer.innerHTML = "";
 
 
-    data.forEach(function (listing) {
+    data.forEach(async function (listing) {
+    const {
+        data: images,
+        error: imagesError
+    } =
+        await supabaseClient.rpc(
+            "get_admin_listing_images",
+            {
+                p_listing_id: listing.id
+            }
+        );
 
+    if (imagesError) {
+
+        console.error(
+            "Listing image error:",
+            imagesError
+        );
+    }
         const card =
             document.createElement("div");
 
@@ -354,10 +371,51 @@ document.addEventListener("DOMContentLoaded", async function () {
                 .filter(Boolean)
                 .join(", ");
 
+        let imageGallery = "";
 
+        if (images && images.length > 0) {
+
+            imageGallery = `
+                <div
+                    style="
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 10px;
+                        margin-bottom: 20px;
+                    "
+                >
+                    ${images.map(function (image) {
+
+                        return `
+                            <img
+                                src="${escapeHtml(image.image_url)}"
+                                alt="Equipment photograph"
+                                style="
+                                    width: 180px;
+                                    height: 135px;
+                                    object-fit: contain;
+                                    background: #dfe7ec;
+                                    border-radius: 4px;
+                                "
+                            >
+                        `;
+
+                    }).join("")}
+                </div>
+            `;
+
+        } else {
+
+            imageGallery = `
+                <p>
+                    <strong>Photographs:</strong>
+                    No photographs uploaded.
+                </p>
+            `;
+        }
         card.innerHTML = `
             <div class="listing-content">
-
+                ${imageGallery}
                 <p class="listing-category">
                     ${escapeHtml(
                         listing.category ||
