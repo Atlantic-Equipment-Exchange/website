@@ -415,7 +415,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
         card.innerHTML = `
             <div class="listing-content">
+
                 ${imageGallery}
+
                 <p class="listing-category">
                     ${escapeHtml(
                         listing.category ||
@@ -527,16 +529,206 @@ document.addEventListener("DOMContentLoaded", async function () {
                         : ""
                 }
 
+                <div
+                    style="
+                        display: flex;
+                        gap: 12px;
+                        margin-top: 25px;
+                        padding-top: 20px;
+                        border-top: 1px solid #ddd;
+                    "
+                >
+
+                    <button
+                        type="button"
+                        class="admin-publish-button"
+                        data-listing-id="${listing.id}"
+                    >
+                        Publish
+                    </button>
+
+                    <button
+                        type="button"
+                        class="admin-reject-button"
+                        data-listing-id="${listing.id}"
+                    >
+                        Reject
+                    </button>
+
+                </div>
+
             </div>
         `;
 
+        const publishButton =
+            card.querySelector(
+                ".admin-publish-button"
+            );
 
+        const rejectButton =
+            card.querySelector(
+                ".admin-reject-button"
+            );
+
+
+        publishButton.addEventListener(
+            "click",
+            async function () {
+
+                const confirmed =
+                    window.confirm(
+                        "Are you sure you want to publish this listing?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                await updateListingStatus(
+                    listing.id,
+                    "published",
+                    publishButton,
+                    rejectButton
+                );
+            }
+        );
+
+
+        rejectButton.addEventListener(
+            "click",
+            async function () {
+
+                const confirmed =
+                    window.confirm(
+                        "Are you sure you want to reject this listing?"
+                    );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                await updateListingStatus(
+                    listing.id,
+                    "rejected",
+                    publishButton,
+                    rejectButton
+                );
+            }
+        );
+
+        
         listingsContainer.appendChild(
             card
         );
     });
 }
 
+async function updateListingStatus(
+    listingId,
+    newStatus,
+    publishButton,
+    rejectButton
+) {
+
+    publishButton.disabled = true;
+    rejectButton.disabled = true;
+
+
+    const originalPublishText =
+        publishButton.textContent;
+
+    const originalRejectText =
+        rejectButton.textContent;
+
+
+    if (newStatus === "published") {
+
+        publishButton.textContent =
+            "Publishing...";
+
+    } else {
+
+        rejectButton.textContent =
+            "Rejecting...";
+    }
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_update_listing_status",
+            {
+                p_listing_id: listingId,
+                p_status: newStatus
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Listing status update error:",
+            error
+        );
+
+        alert(
+            "The listing could not be updated.\n\n" +
+            error.message
+        );
+
+        publishButton.disabled = false;
+        rejectButton.disabled = false;
+
+        publishButton.textContent =
+            originalPublishText;
+
+        rejectButton.textContent =
+            originalRejectText;
+
+        return;
+    }
+
+
+    if (data !== true) {
+
+        alert(
+            "The listing was not updated. " +
+            "It may no longer be pending."
+        );
+
+        publishButton.disabled = false;
+        rejectButton.disabled = false;
+
+        publishButton.textContent =
+            originalPublishText;
+
+        rejectButton.textContent =
+            originalRejectText;
+
+        return;
+    }
+
+
+    /*
+     * The database successfully changed the status.
+     */
+    console.log(
+        "Listing status updated:",
+        listingId,
+        newStatus
+    );
+
+
+    /*
+     * Reload the pending listings.
+     *
+     * The processed listing should disappear
+     * because it is no longer pending.
+     */
+    await loadPendingListings();
+}
 
     /*
      * Convert database condition values into
