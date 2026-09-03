@@ -261,11 +261,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         const location =
             document.createElement("span");
 
+       
         location.textContent =
-            [listing.city, listing.province]
+            [
+                listing.city,
+                formatProvince(listing.province)
+            ]
                 .filter(Boolean)
                 .join(", ");
-
 
         const condition =
             document.createElement("span");
@@ -403,6 +406,31 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
+    // =====================================================
+    // FORMAT PROVINCE FOR CUSTOMER DISPLAY
+    // =====================================================
+
+    function formatProvince(province) {
+
+        const provinceMap = {
+            "nova-scotia": "Nova Scotia",
+            "new-brunswick": "New Brunswick",
+            "pei": "Prince Edward Island",
+            "newfoundland": "Newfoundland & Labrador"
+        };
+
+        const normalizedProvince =
+            String(province || "")
+                .trim()
+                .toLowerCase();
+
+        return (
+            provinceMap[normalizedProvince] ||
+            province ||
+            ""
+        );
+    }
+    
     // =====================================================
     // FILTER LISTINGS
     // =====================================================
