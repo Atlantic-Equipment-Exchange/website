@@ -635,6 +635,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     await loadListing();
 
-    await loadListingImages();
+    
 
 });
