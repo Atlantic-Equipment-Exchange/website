@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const { data, error } =
             await supabaseClient.rpc(
-                "get_published_equipment"
+                "get_published_equipment_with_images"
             );
 
 
@@ -167,16 +167,45 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-image";
 
 
-        const placeholderImage =
-            document.createElement("div");
+        if (listing.image_url) {
 
-        placeholderImage.className =
-            "placeholder-image";
+            const listingImage =
+                document.createElement("img");
 
-        placeholderImage.textContent =
-            (listing.category || "EQUIPMENT")
-                .toUpperCase() +
-            " EQUIPMENT";
+            listingImage.src =
+                listing.image_url;
+
+            listingImage.alt =
+                listing.title ||
+                "Equipment photograph";
+
+            listingImage.loading =
+                "lazy";
+
+            listingImage.className =
+                "listing-card-image";
+
+            imageContainer.appendChild(
+                listingImage
+            );
+
+        } else {
+
+            const placeholderImage =
+                document.createElement("div");
+
+            placeholderImage.className =
+                "placeholder-image";
+
+            placeholderImage.textContent =
+                (listing.category || "EQUIPMENT")
+                    .toUpperCase() +
+                " EQUIPMENT";
+
+            imageContainer.appendChild(
+                placeholderImage
+            );
+        }
 
 
         const badge =
@@ -186,17 +215,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             "listing-badge";
 
         badge.textContent =
-            listing.condition || "Used";
+            formatCondition(
+                listing.condition
+            );
 
-
-        imageContainer.appendChild(
-            placeholderImage
-        );
 
         imageContainer.appendChild(
             badge
         );
-
 
         // =================================================
         // LISTING CONTENT
@@ -405,7 +431,31 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     }
 
+    // =====================================================
+    // FORMAT CONDITION FOR CUSTOMER DISPLAY
+    // =====================================================
 
+    function formatCondition(condition) {
+
+        const conditionMap = {
+            new: "New",
+            excellent: "Used - Excellent",
+            good: "Used - Good",
+            fair: "Used - Fair",
+            parts: "For Parts"
+        };
+
+        const normalizedCondition =
+            String(condition || "")
+                .trim()
+                .toLowerCase();
+
+        return (
+            conditionMap[normalizedCondition] ||
+            condition ||
+            "Condition not specified"
+        );
+    }
     // =====================================================
     // FORMAT PROVINCE FOR CUSTOMER DISPLAY
     // =====================================================
