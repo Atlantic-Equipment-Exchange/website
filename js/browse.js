@@ -16,25 +16,39 @@ document.addEventListener("DOMContentLoaded", async function () {
     // =====================================================
 
     const searchInput =
-        document.getElementById("equipment-search");
+        document.getElementById(
+            "equipment-search"
+        );
 
     const categoryFilter =
-        document.getElementById("category-filter");
+        document.getElementById(
+            "category-filter"
+        );
 
     const locationFilter =
-        document.getElementById("location-filter");
+        document.getElementById(
+            "location-filter"
+        );
 
     const sortListings =
-        document.getElementById("sort-listings");
+        document.getElementById(
+            "sort-listings"
+        );
 
     const clearFiltersButton =
-        document.getElementById("clear-filters");
+        document.getElementById(
+            "clear-filters"
+        );
 
     const listingGrid =
-        document.querySelector(".listing-grid");
+        document.querySelector(
+            ".listing-grid"
+        );
 
-    const listingHeader =
-        document.querySelector(".listing-header p");
+    const listingCount =
+        document.getElementById(
+            "listing-count"
+        );
 
 
     // =====================================================
@@ -57,7 +71,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         `;
 
 
-        const { data, error } =
+        const {
+            data,
+            error
+        } =
             await supabaseClient.rpc(
                 "get_published_equipment_with_images"
             );
@@ -73,27 +90,30 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             listingGrid.innerHTML = `
                 <div class="no-results-message">
+
                     <h2>Unable to load listings</h2>
 
                     <p>
                         We are currently unable to retrieve
                         equipment listings. Please try again later.
                     </p>
+
                 </div>
             `;
 
             updateListingCount(0);
 
             return;
-
         }
 
 
-        listings = data || [];
+        listings =
+            Array.isArray(data)
+                ? data
+                : [];
 
 
         renderListings();
-
     }
 
 
@@ -103,34 +123,53 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function renderListings() {
 
+        const filteredListings =
+            getFilteredListings();
+
+
+        const sortedListings =
+            sortListingsData(
+                filteredListings
+            );
+
+
         listingGrid.innerHTML = "";
 
 
-        if (listings.length === 0) {
+        if (sortedListings.length === 0) {
 
             updateListingCount(0);
 
-            showNoResultsMessage(0);
+            showNoResultsMessage();
 
             return;
-
         }
 
 
-        listings.forEach(function (listing) {
-
-            const card =
-                createListingCard(listing);
-
-            listingGrid.appendChild(card);
-
-        });
+        hideNoResultsMessage();
 
 
-        updateListingCount(listings.length);
+        sortedListings.forEach(
+            function (listing) {
 
-        filterListings();
+                const card =
+                    createListingCard(
+                        listing
+                    );
 
+                listingGrid.appendChild(
+                    card
+                );
+            }
+        );
+
+
+        updateListingCount(
+            sortedListings.length
+        );
+
+
+        updateClearButton();
     }
 
 
@@ -141,19 +180,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     function createListingCard(listing) {
 
         const card =
-            document.createElement("article");
+            document.createElement(
+                "article"
+            );
 
 
         card.className =
             "listing-card";
-
-
-        card.dataset.category =
-            (listing.category || "").toLowerCase();
-
-
-        card.dataset.location =
-            (listing.city || "").toLowerCase();
 
 
         // =================================================
@@ -161,7 +194,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         // =================================================
 
         const imageContainer =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         imageContainer.className =
             "listing-image";
@@ -170,20 +206,27 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (listing.image_url) {
 
             const listingImage =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
+
 
             listingImage.src =
                 listing.image_url;
+
 
             listingImage.alt =
                 listing.title ||
                 "Equipment photograph";
 
+
             listingImage.loading =
                 "lazy";
 
+
             listingImage.className =
                 "listing-card-image";
+
 
             imageContainer.appendChild(
                 listingImage
@@ -192,15 +235,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         } else {
 
             const placeholderImage =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             placeholderImage.className =
                 "placeholder-image";
 
+
             placeholderImage.textContent =
-                (listing.category || "EQUIPMENT")
-                    .toUpperCase() +
+                (
+                    listing.category ||
+                    "EQUIPMENT"
+                ).toUpperCase() +
                 " EQUIPMENT";
+
 
             imageContainer.appendChild(
                 placeholderImage
@@ -209,10 +259,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         const badge =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
+
 
         badge.className =
             "listing-badge";
+
 
         badge.textContent =
             formatCondition(
@@ -224,24 +278,34 @@ document.addEventListener("DOMContentLoaded", async function () {
             badge
         );
 
+
         // =================================================
         // LISTING CONTENT
         // =================================================
 
         const content =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         content.className =
             "listing-content";
 
 
+        // =================================================
         // CATEGORY
+        // =================================================
 
         const category =
-            document.createElement("p");
+            document.createElement(
+                "p"
+            );
+
 
         category.className =
             "listing-category";
+
 
         category.textContent =
             (
@@ -250,23 +314,34 @@ document.addEventListener("DOMContentLoaded", async function () {
             ).toUpperCase();
 
 
+        // =================================================
         // TITLE
+        // =================================================
 
         const title =
-            document.createElement("h2");
+            document.createElement(
+                "h2"
+            );
+
 
         title.textContent =
             listing.title ||
             "Untitled Equipment";
 
 
+        // =================================================
         // DESCRIPTION
+        // =================================================
 
         const description =
-            document.createElement("p");
+            document.createElement(
+                "p"
+            );
+
 
         description.className =
             "listing-description";
+
 
         description.textContent =
             listing.description ||
@@ -278,35 +353,48 @@ document.addEventListener("DOMContentLoaded", async function () {
         // =================================================
 
         const details =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         details.className =
             "listing-details";
 
 
         const location =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
-       
+
         location.textContent =
             [
                 listing.city,
-                formatProvince(listing.province)
+                formatProvince(
+                    listing.province
+                )
             ]
                 .filter(Boolean)
                 .join(", ");
 
+
         const condition =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
+
 
         condition.textContent =
-            listing.condition ||
-            "Condition not specified";
+            formatCondition(
+                listing.condition
+            );
 
 
         details.appendChild(
             location
         );
+
 
         details.appendChild(
             condition
@@ -318,25 +406,39 @@ document.addEventListener("DOMContentLoaded", async function () {
         // =================================================
 
         const footer =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
+
 
         footer.className =
             "listing-footer";
 
 
         const price =
-            document.createElement("strong");
+            document.createElement(
+                "strong"
+            );
+
 
         price.textContent =
-            formatPrice(listing.price);
+            formatPrice(
+                listing.price
+            );
 
 
         const viewLink =
-            document.createElement("a");
+            document.createElement(
+                "a"
+            );
+
 
         viewLink.href =
             "listing.html?id=" +
-            encodeURIComponent(listing.id);
+            encodeURIComponent(
+                listing.id
+            );
+
 
         viewLink.textContent =
             "View";
@@ -345,6 +447,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         footer.appendChild(
             price
         );
+
 
         footer.appendChild(
             viewLink
@@ -359,17 +462,21 @@ document.addEventListener("DOMContentLoaded", async function () {
             category
         );
 
+
         content.appendChild(
             title
         );
+
 
         content.appendChild(
             description
         );
 
+
         content.appendChild(
             details
         );
+
 
         content.appendChild(
             footer
@@ -380,13 +487,13 @@ document.addEventListener("DOMContentLoaded", async function () {
             imageContainer
         );
 
+
         card.appendChild(
             content
         );
 
 
         return card;
-
     }
 
 
@@ -403,7 +510,6 @@ document.addEventListener("DOMContentLoaded", async function () {
         ) {
 
             return "Price on request";
-
         }
 
 
@@ -412,11 +518,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         if (
-            Number.isNaN(numericPrice)
+            Number.isNaN(
+                numericPrice
+            )
         ) {
 
             return "Price on request";
-
         }
 
 
@@ -427,9 +534,50 @@ document.addEventListener("DOMContentLoaded", async function () {
                 currency: "CAD",
                 maximumFractionDigits: 0
             }
-        ).format(numericPrice);
-
+        ).format(
+            numericPrice
+        );
     }
+
+
+    // =====================================================
+    // FORMAT PROVINCE FOR CUSTOMER DISPLAY
+    // =====================================================
+
+    function formatProvince(province) {
+
+        const provinceMap = {
+            "nova-scotia":
+                "Nova Scotia",
+
+            "new-brunswick":
+                "New Brunswick",
+
+            "pei":
+                "Prince Edward Island",
+
+            "newfoundland":
+                "Newfoundland & Labrador"
+        };
+
+
+        const normalizedProvince =
+            String(
+                province || ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        return (
+            provinceMap[
+                normalizedProvince
+            ] ||
+            province ||
+            ""
+        );
+    }
+
 
     // =====================================================
     // FORMAT CONDITION FOR CUSTOMER DISPLAY
@@ -438,54 +586,46 @@ document.addEventListener("DOMContentLoaded", async function () {
     function formatCondition(condition) {
 
         const conditionMap = {
-            new: "New",
-            excellent: "Used - Excellent",
-            good: "Used - Good",
-            fair: "Used - Fair",
-            parts: "For Parts"
+            "new":
+                "New",
+
+            "excellent":
+                "Used - Excellent",
+
+            "good":
+                "Used - Good",
+
+            "fair":
+                "Used - Fair",
+
+            "parts":
+                "For Parts"
         };
 
+
         const normalizedCondition =
-            String(condition || "")
+            String(
+                condition || ""
+            )
                 .trim()
                 .toLowerCase();
 
+
         return (
-            conditionMap[normalizedCondition] ||
+            conditionMap[
+                normalizedCondition
+            ] ||
             condition ||
             "Condition not specified"
         );
     }
+
+
     // =====================================================
-    // FORMAT PROVINCE FOR CUSTOMER DISPLAY
-    // =====================================================
-
-    function formatProvince(province) {
-
-        const provinceMap = {
-            "nova-scotia": "Nova Scotia",
-            "new-brunswick": "New Brunswick",
-            "pei": "Prince Edward Island",
-            "newfoundland": "Newfoundland & Labrador"
-        };
-
-        const normalizedProvince =
-            String(province || "")
-                .trim()
-                .toLowerCase();
-
-        return (
-            provinceMap[normalizedProvince] ||
-            province ||
-            ""
-        );
-    }
-    
-    // =====================================================
-    // FILTER LISTINGS
+    // GET FILTERED LISTINGS
     // =====================================================
 
-    function filterListings() {
+    function getFilteredListings() {
 
         const searchTerm =
             searchInput.value
@@ -495,85 +635,241 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const selectedCategory =
             categoryFilter.value
+                .trim()
                 .toLowerCase();
 
 
         const selectedLocation =
             locationFilter.value
+                .trim()
                 .toLowerCase();
 
 
-        let visibleCount = 0;
+        return listings.filter(
+            function (listing) {
+
+                const title =
+                    String(
+                        listing.title || ""
+                    ).toLowerCase();
 
 
-        const listingCards =
-            Array.from(
-                document.querySelectorAll(
-                    ".listing-card"
-                )
+                const category =
+                    String(
+                        listing.category || ""
+                    ).toLowerCase();
+
+
+                const description =
+                    String(
+                        listing.description || ""
+                    ).toLowerCase();
+
+
+                const city =
+                    String(
+                        listing.city || ""
+                    ).toLowerCase();
+
+
+                const province =
+                    String(
+                        listing.province || ""
+                    ).toLowerCase();
+
+
+                const condition =
+                    String(
+                        listing.condition || ""
+                    ).toLowerCase();
+
+
+                const searchableText =
+                    [
+                        title,
+                        category,
+                        description,
+                        city,
+                        province,
+                        condition
+                    ]
+                        .join(" ");
+
+
+                const matchesSearch =
+                    searchTerm === "" ||
+                    searchableText.includes(
+                        searchTerm
+                    );
+
+
+                const matchesCategory =
+                    selectedCategory === "all" ||
+                    category === selectedCategory;
+
+
+                const matchesLocation =
+                    selectedLocation === "all" ||
+                    province === selectedLocation;
+
+
+                return (
+                    matchesSearch &&
+                    matchesCategory &&
+                    matchesLocation
+                );
+            }
+        );
+    }
+
+
+    // =====================================================
+    // SORT LISTINGS
+    // =====================================================
+
+    function sortListingsData(
+        filteredListings
+    ) {
+
+        const sortValue =
+            sortListings.value;
+
+
+        const sorted =
+            [...filteredListings];
+
+
+        if (
+            sortValue === "newest"
+        ) {
+
+            sorted.sort(
+                function (a, b) {
+
+                    return (
+                        new Date(
+                            b.created_at
+                        ) -
+                        new Date(
+                            a.created_at
+                        )
+                    );
+                }
             );
 
-
-        listingCards.forEach(function (listing) {
-
-            const listingText =
-                listing.textContent.toLowerCase();
+        }
 
 
-            const listingCategory =
-                (
-                    listing.dataset.category || ""
-                ).toLowerCase();
+        else if (
+            sortValue === "price-low"
+        ) {
+
+            sorted.sort(
+                function (a, b) {
+
+                    const aHasPrice =
+                        a.price !== null &&
+                        a.price !== undefined &&
+                        a.price !== "" &&
+                        !Number.isNaN(
+                            Number(a.price)
+                        );
 
 
-            const listingLocation =
-                (
-                    listing.dataset.location || ""
-                ).toLowerCase();
+                    const bHasPrice =
+                        b.price !== null &&
+                        b.price !== undefined &&
+                        b.price !== "" &&
+                        !Number.isNaN(
+                            Number(b.price)
+                        );
 
 
-            const matchesSearch =
-                searchTerm === "" ||
-                listingText.includes(searchTerm);
+                    // Listings without a price
+                    // go to the bottom.
+                    if (
+                        !aHasPrice &&
+                        !bHasPrice
+                    ) {
+                        return 0;
+                    }
 
 
-            const matchesCategory =
-                selectedCategory === "all" ||
-                listingCategory === selectedCategory;
+                    if (!aHasPrice) {
+                        return 1;
+                    }
 
 
-            const matchesLocation =
-                selectedLocation === "all" ||
-                listingLocation === selectedLocation;
+                    if (!bHasPrice) {
+                        return -1;
+                    }
 
 
-            const matches =
-                matchesSearch &&
-                matchesCategory &&
-                matchesLocation;
+                    return (
+                        Number(a.price) -
+                        Number(b.price)
+                    );
+                }
+            );
+
+        }
 
 
-            if (matches) {
+        else if (
+            sortValue === "price-high"
+        ) {
 
-                listing.style.display = "";
+            sorted.sort(
+                function (a, b) {
 
-                visibleCount++;
-
-            } else {
-
-                listing.style.display = "none";
-
-            }
-
-        });
+                    const aHasPrice =
+                        a.price !== null &&
+                        a.price !== undefined &&
+                        a.price !== "" &&
+                        !Number.isNaN(
+                            Number(a.price)
+                        );
 
 
-        updateListingCount(visibleCount);
+                    const bHasPrice =
+                        b.price !== null &&
+                        b.price !== undefined &&
+                        b.price !== "" &&
+                        !Number.isNaN(
+                            Number(b.price)
+                        );
 
-        updateClearButton();
 
-        showNoResultsMessage(visibleCount);
+                    // Listings without a price
+                    // go to the bottom.
+                    if (
+                        !aHasPrice &&
+                        !bHasPrice
+                    ) {
+                        return 0;
+                    }
 
+
+                    if (!aHasPrice) {
+                        return 1;
+                    }
+
+
+                    if (!bHasPrice) {
+                        return -1;
+                    }
+
+
+                    return (
+                        Number(b.price) -
+                        Number(a.price)
+                    );
+                }
+            );
+        }
+
+
+        return sorted;
     }
 
 
@@ -581,27 +877,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     // UPDATE LISTING COUNT
     // =====================================================
 
-    function updateListingCount(count) {
+    function updateListingCount(
+        count
+    ) {
 
-        if (!listingHeader) {
+        if (!listingCount) {
             return;
         }
 
 
-        if (count === 1) {
-
-            listingHeader.innerHTML =
-                "<strong>1</strong> equipment listing";
-
-        } else {
-
-            listingHeader.innerHTML =
-                "<strong>" +
-                count +
-                "</strong> equipment listings";
-
-        }
-
+        listingCount.textContent =
+            count;
     }
 
 
@@ -617,7 +903,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         const hasSearch =
-            searchInput.value.trim() !== "";
+            searchInput.value
+                .trim() !== "";
 
 
         const hasCategory =
@@ -628,10 +915,15 @@ document.addEventListener("DOMContentLoaded", async function () {
             locationFilter.value !== "all";
 
 
+        const hasSort =
+            sortListings.value !== "newest";
+
+
         if (
             hasSearch ||
             hasCategory ||
-            hasLocation
+            hasLocation ||
+            hasSort
         ) {
 
             clearFiltersButton.style.display =
@@ -641,9 +933,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             clearFiltersButton.style.display =
                 "none";
-
         }
-
     }
 
 
@@ -653,14 +943,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     function clearFilters() {
 
-        searchInput.value = "";
+        searchInput.value =
+            "";
 
-        categoryFilter.value = "all";
+        categoryFilter.value =
+            "all";
 
-        locationFilter.value = "all";
+        locationFilter.value =
+            "all";
 
-        filterListings();
+        sortListings.value =
+            "newest";
 
+
+        renderListings();
     }
 
 
@@ -668,7 +964,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     // NO RESULTS MESSAGE
     // =====================================================
 
-    function showNoResultsMessage(count) {
+    function showNoResultsMessage() {
 
         let message =
             document.getElementById(
@@ -679,143 +975,59 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (!message) {
 
             message =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
+
 
             message.id =
                 "no-results-message";
 
+
             message.className =
                 "no-results-message";
 
+
             message.innerHTML = `
-                <h2>No equipment found</h2>
+                <h2>
+                    No equipment found
+                </h2>
 
                 <p>
-                    We couldn't find equipment matching
-                    your search criteria.
+                    We couldn't find equipment
+                    matching your search criteria.
                 </p>
             `;
 
-            listingGrid.after(message);
 
+            listingGrid.after(
+                message
+            );
         }
 
 
-        if (count === 0) {
-
-            message.style.display = "block";
-
-        } else {
-
-            message.style.display = "none";
-
-        }
-
+        message.style.display =
+            "block";
     }
 
 
     // =====================================================
-    // GET PRICE FROM CARD
+    // HIDE NO RESULTS MESSAGE
     // =====================================================
 
-    function getPrice(listing) {
+    function hideNoResultsMessage() {
 
-        const priceElement =
-            listing.querySelector(
-                ".listing-footer strong"
+        const message =
+            document.getElementById(
+                "no-results-message"
             );
 
 
-        if (!priceElement) {
-            return 0;
+        if (message) {
+
+            message.style.display =
+                "none";
         }
-
-
-        const priceText =
-            priceElement.textContent;
-
-
-        const numericPrice =
-            priceText.replace(
-                /[^0-9.]/g,
-                ""
-            );
-
-
-        return parseFloat(
-            numericPrice
-        ) || 0;
-
-    }
-
-
-    // =====================================================
-    // SORT LISTINGS
-    // =====================================================
-
-    function sortListingCards() {
-
-        const sortValue =
-            sortListings.value;
-
-
-        const listingCards =
-            Array.from(
-                document.querySelectorAll(
-                    ".listing-card"
-                )
-            );
-
-
-        let sortedListings =
-            [...listingCards];
-
-
-        if (sortValue === "price-low") {
-
-            sortedListings.sort(
-                function (a, b) {
-
-                    return (
-                        getPrice(a) -
-                        getPrice(b)
-                    );
-
-                }
-            );
-
-        }
-
-
-        else if (sortValue === "price-high") {
-
-            sortedListings.sort(
-                function (a, b) {
-
-                    return (
-                        getPrice(b) -
-                        getPrice(a)
-                    );
-
-                }
-            );
-
-        }
-
-
-        sortedListings.forEach(
-            function (listing) {
-
-                listingGrid.appendChild(
-                    listing
-                );
-
-            }
-        );
-
-
-        filterListings();
-
     }
 
 
@@ -825,25 +1037,25 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     searchInput.addEventListener(
         "input",
-        filterListings
+        renderListings
     );
 
 
     categoryFilter.addEventListener(
         "change",
-        filterListings
+        renderListings
     );
 
 
     locationFilter.addEventListener(
         "change",
-        filterListings
+        renderListings
     );
 
 
     sortListings.addEventListener(
         "change",
-        sortListingCards
+        renderListings
     );
 
 
