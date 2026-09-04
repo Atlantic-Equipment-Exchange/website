@@ -221,8 +221,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         const condition =
-            listing.condition ||
-            "Condition not specified";
+            formatCondition(
+                listing.condition
+            );
 
 
         const description =
@@ -233,7 +234,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const location =
             [
                 listing.city,
-                listing.province
+                formatProvince(listing.province)
             ]
                 .filter(Boolean)
                 .join(", ");
@@ -299,6 +300,59 @@ document.addEventListener("DOMContentLoaded", async function () {
         listingDetails.style.display =
             "block";
 
+    }
+
+
+    // =====================================================
+    // FORMAT PROVINCE FOR CUSTOMER DISPLAY
+    // =====================================================
+
+    function formatProvince(province) {
+
+        const provinceMap = {
+            "nova-scotia": "Nova Scotia",
+            "new-brunswick": "New Brunswick",
+            "pei": "Prince Edward Island",
+            "newfoundland": "Newfoundland & Labrador"
+        };
+
+        const normalizedProvince =
+            String(province || "")
+                .trim()
+                .toLowerCase();
+
+        return (
+            provinceMap[normalizedProvince] ||
+            province ||
+            ""
+        );
+    }
+
+
+    // =====================================================
+    // FORMAT CONDITION FOR CUSTOMER DISPLAY
+    // =====================================================
+
+    function formatCondition(condition) {
+
+        const conditionMap = {
+            "new": "New",
+            "excellent": "Used - Excellent",
+            "good": "Used - Good",
+            "fair": "Used - Fair",
+            "parts": "For Parts"
+        };
+
+        const normalizedCondition =
+            String(condition || "")
+                .trim()
+                .toLowerCase();
+
+        return (
+            conditionMap[normalizedCondition] ||
+            condition ||
+            "Condition not specified"
+        );
     }
 
     // =====================================================
