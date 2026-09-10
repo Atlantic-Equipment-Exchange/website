@@ -1087,6 +1087,160 @@ body {
     font-weight: 700;
 }
 
+/* =========================================================
+   LISTING DETAIL PAGE
+========================================================= */
+
+.listing-detail-page {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+.listing-detail-card {
+    background: white;
+
+    border: 1px solid #e0e6ea;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.06);
+}
+
+
+.listing-detail-media {
+    position: relative;
+
+    width: 100%;
+
+    height: 520px;
+
+    background: #dfe7ec;
+}
+
+
+.listing-detail-media .listing-image-gallery {
+    width: 100%;
+    height: 100%;
+}
+
+
+.listing-detail-media .listing-badge {
+    z-index: 2;
+}
+
+
+.listing-detail-content {
+    padding: 32px;
+}
+
+
+.listing-detail-content .listing-category {
+    margin-bottom: 10px;
+
+    font-size: 0.75rem;
+}
+
+
+.listing-detail-content h2 {
+    margin: 0 0 18px;
+
+    color: #102f45;
+
+    font-size: 2rem;
+
+    line-height: 1.2;
+}
+
+
+.listing-detail-content .listing-description {
+    min-height: 0;
+
+    margin-bottom: 25px;
+
+    color: #4f606c;
+
+    font-size: 1rem;
+
+    line-height: 1.7;
+}
+
+
+.listing-detail-content .listing-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    padding-top: 20px;
+
+    font-size: 0.92rem;
+}
+
+
+.listing-detail-content .listing-footer {
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top:
+        1px solid #edf0f2;
+}
+
+
+.listing-detail-content .listing-footer strong {
+    font-size: 1.5rem;
+}
+
+
+.listing-detail-page .listing-photo-thumbnails {
+    padding: 0 32px;
+
+    margin-top: 15px;
+}
+
+
+.listing-detail-page .listing-photo-thumbnail {
+    flex-basis: 90px;
+
+    width: 90px;
+
+    height: 68px;
+}
+
+
+@media (max-width: 750px) {
+
+    .listing-detail-media {
+        height: 380px;
+    }
+
+
+    .listing-detail-content {
+        padding: 25px;
+    }
+
+
+    .listing-detail-content h2 {
+        font-size: 1.6rem;
+    }
+
+
+    .listing-detail-content .listing-details {
+        grid-template-columns: 1fr;
+    }
+
+
+    .listing-detail-page .listing-photo-thumbnails {
+        padding: 0 25px;
+    }
+
+}
 
 /* =========================================================
    BROWSE MOBILE
