@@ -74,12 +74,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         </form>
 
+        <p style="margin-top: 12px;">
+            <a href="#"
+               id="admin-forgot-password">
+                Forgot your password?
+            </a>
+        </p>
+
         <p
             id="admin-login-message"
             style="display: none; margin-top: 15px;"
         ></p>
     `;
-
 
     const loginForm =
         document.getElementById("admin-login-form");
@@ -90,6 +96,11 @@ document.addEventListener("DOMContentLoaded", async function () {
     const loginMessage =
         document.getElementById("admin-login-message");
 
+    const forgotPasswordLink =
+        document.getElementById(
+            "admin-forgot-password"
+        );
+    
     signOutButton.addEventListener(
         "click",
         async function () {
@@ -131,6 +142,103 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     );
 
+    forgotPasswordLink.addEventListener(
+        "click",
+        async function (event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document
+                    .getElementById("admin-email")
+                    .value
+                    .trim();
+
+
+            if (!email) {
+
+                loginMessage.textContent =
+                    "Enter your administrator email address first.";
+
+                loginMessage.style.display =
+                    "block";
+
+                return;
+            }
+
+
+            if (
+                !document
+                    .getElementById("admin-email")
+                    .checkValidity()
+            ) {
+
+                loginMessage.textContent =
+                    "Please enter a valid email address.";
+
+                loginMessage.style.display =
+                    "block";
+
+                return;
+            }
+
+
+            forgotPasswordLink.style.pointerEvents =
+                "none";
+
+            forgotPasswordLink.textContent =
+                "Sending recovery email...";
+
+            loginMessage.style.display =
+                "none";
+
+
+            const {
+                error
+            } =
+                await supabaseClient.auth.resetPasswordForEmail(
+                    email,
+                    {
+                        redirectTo:
+                            "https://atlantic-equipment-exchange.github.io/website/update-password.html"
+                    }
+                );
+
+
+            forgotPasswordLink.style.pointerEvents =
+                "";
+
+            forgotPasswordLink.textContent =
+                "Forgot your password?";
+
+
+            if (error) {
+
+                console.error(
+                    "Password recovery error:",
+                    error
+                );
+
+
+                loginMessage.textContent =
+                    "We could not send the password recovery email. Please try again later.";
+
+                loginMessage.style.display =
+                    "block";
+
+                return;
+            }
+
+
+            loginMessage.textContent =
+                "If this email belongs to the administrator account, a password recovery link has been sent. Please check your inbox.";
+
+            loginMessage.style.display =
+                "block";
+        }
+    );
+    
     /*
      * Check the existing Supabase session.
      */
