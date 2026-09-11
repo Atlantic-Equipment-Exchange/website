@@ -27,7 +27,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById(
             "admin-action-message"
         );
-
+    const adminEnquiries =
+        document.getElementById(
+            "admin-enquiries"
+        );
     /*
      * Create the administrator login form.
      */
@@ -287,6 +290,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         await loadPendingListings();
+        await loadAdminEnquiries();
     }
 
 
@@ -672,6 +676,251 @@ document.addEventListener("DOMContentLoaded", async function () {
             card
         );
     });
+}
+
+// =====================================================
+// LOAD ADMIN BUYER ENQUIRIES
+// =====================================================
+
+async function loadAdminEnquiries() {
+
+    if (!adminEnquiries) {
+        return;
+    }
+
+
+    adminEnquiries.innerHTML = `
+        <p>
+            Loading buyer enquiries...
+        </p>
+    `;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "get_admin_equipment_enquiries"
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Buyer enquiries error:",
+            error
+        );
+
+
+        adminEnquiries.innerHTML = `
+            <div class="listing-card">
+
+                <div class="listing-content">
+
+                    <h3>
+                        Unable to load enquiries
+                    </h3>
+
+                    <p>
+                        We could not retrieve buyer enquiries
+                        at this time.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    if (!data || data.length === 0) {
+
+        adminEnquiries.innerHTML = `
+            <div class="listing-card">
+
+                <div class="listing-content">
+
+                    <h3>
+                        No buyer enquiries
+                    </h3>
+
+                    <p>
+                        There are currently no buyer enquiries
+                        to review.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+
+        return;
+    }
+
+
+    adminEnquiries.innerHTML = "";
+
+
+    data.forEach(function (enquiry) {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+
+        card.className =
+            "listing-card";
+
+
+        card.style.marginBottom =
+            "20px";
+
+
+        const submittedDate =
+            enquiry.created_at
+                ? new Date(
+                    enquiry.created_at
+                ).toLocaleString()
+                : "Unknown";
+
+
+        const status =
+            enquiry.status ||
+            "new";
+
+
+        card.innerHTML = `
+            <div class="listing-content">
+
+                <p class="listing-category">
+                    BUYER ENQUIRY
+                </p>
+
+                <h3>
+                    ${escapeHtml(
+                        enquiry.listing_title ||
+                        "Equipment listing"
+                    )}
+                </h3>
+
+                <p>
+                    <strong>
+                        Submitted:
+                    </strong>
+                    ${escapeHtml(
+                        submittedDate
+                    )}
+                </p>
+
+                <p>
+                    <strong>
+                        Buyer:
+                    </strong>
+                    ${escapeHtml(
+                        enquiry.buyer_name ||
+                        ""
+                    )}
+                </p>
+
+                <p>
+                    <strong>
+                        Email:
+                    </strong>
+                    ${escapeHtml(
+                        enquiry.buyer_email ||
+                        ""
+                    )}
+                </p>
+
+                ${
+                    enquiry.buyer_phone
+                        ? `
+                            <p>
+                                <strong>
+                                    Phone:
+                                </strong>
+                                ${escapeHtml(
+                                    enquiry.buyer_phone
+                                )}
+                            </p>
+                          `
+                        : ""
+                }
+
+                <p>
+                    <strong>
+                        Status:
+                    </strong>
+                    ${escapeHtml(
+                        formatEnquiryStatus(
+                            status
+                        )
+                    )}
+                </p>
+
+                <div
+                    style="
+                        margin-top: 15px;
+                        padding-top: 15px;
+                        border-top: 1px solid #edf0f2;
+                    "
+                >
+
+                    <strong>
+                        Message:
+                    </strong>
+
+                    <p>
+                        ${escapeHtml(
+                            enquiry.message ||
+                            ""
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+
+
+        adminEnquiries.appendChild(
+            card
+        );
+    });
+}
+
+// =====================================================
+// FORMAT ENQUIRY STATUS
+// =====================================================
+
+function formatEnquiryStatus(status) {
+
+    const statusMap = {
+        new: "New",
+        contacted: "Contacted",
+        closed: "Closed"
+    };
+
+
+    const normalizedStatus =
+        String(
+            status || ""
+        )
+            .trim()
+            .toLowerCase();
+
+
+    return (
+        statusMap[
+            normalizedStatus
+        ] ||
+        status ||
+        "New"
+    );
 }
 
 async function updateListingStatus(
