@@ -94,7 +94,46 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById(
             "listing-image-gallery"
         );
+    
+    const listingEnquiryForm =
+        document.getElementById(
+            "listing-enquiry-form"
+        );
 
+    const enquiryName =
+        document.getElementById(
+            "enquiry-name"
+        );
+
+    const enquiryEmail =
+        document.getElementById(
+            "enquiry-email"
+        );
+
+    const enquiryPhone =
+        document.getElementById(
+            "enquiry-phone"
+        );
+
+    const enquiryMessage =
+        document.getElementById(
+            "enquiry-message"
+        );
+
+    const enquirySubmitButton =
+        document.getElementById(
+            "enquiry-submit-button"
+        );
+
+    const enquirySuccess =
+        document.getElementById(
+            "enquiry-success"
+        );
+
+    const enquiryError =
+        document.getElementById(
+            "enquiry-error"
+        );
     // =====================================================
     // GET LISTING ID FROM URL
     // =====================================================
@@ -602,7 +641,200 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     }
 
+    // =====================================================
+    // SUBMIT BUYER ENQUIRY
+    // =====================================================
 
+    async function submitEnquiry() {
+
+        if (!listingEnquiryForm) {
+            return;
+        }
+
+
+        const buyerName =
+            enquiryName.value.trim();
+
+        const buyerEmail =
+            enquiryEmail.value.trim();
+
+        const buyerPhone =
+            enquiryPhone.value.trim();
+
+        const buyerMessage =
+            enquiryMessage.value.trim();
+
+    
+        // -------------------------------------------------
+        // Basic client-side validation
+        // -------------------------------------------------
+
+        if (!buyerName) {
+
+            enquiryError.textContent =
+                "Please enter your name.";
+
+            enquiryError.style.display =
+                "block";
+
+            return;
+        }
+
+
+        if (!buyerEmail) {
+
+            enquiryError.textContent =
+                "Please enter your email address.";
+
+            enquiryError.style.display =
+                "block";
+
+            return;
+        }
+
+
+        if (!enquiryEmail.checkValidity()) {
+
+            enquiryError.textContent =
+                "Please enter a valid email address.";
+
+            enquiryError.style.display =
+                "block";
+
+            return;
+        }
+
+
+        if (!buyerMessage) {
+
+            enquiryError.textContent =
+                "Please enter a message.";
+
+            enquiryError.style.display =
+                "block";
+
+            return;
+        }
+
+
+        // -------------------------------------------------
+        // Clear previous messages
+        // -------------------------------------------------
+
+        enquirySuccess.style.display =
+            "none";
+
+        enquiryError.style.display =
+            "none";
+
+
+        // -------------------------------------------------
+        // Disable submit button
+        // -------------------------------------------------
+
+        enquirySubmitButton.disabled =
+            true;
+
+        enquirySubmitButton.textContent =
+            "Sending...";
+
+
+        // -------------------------------------------------
+        // Submit through secure Supabase RPC
+        // -------------------------------------------------
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.rpc(
+                "submit_equipment_enquiry",
+                {
+                    p_listing_id:
+                        numericListingId,
+
+                    p_buyer_name:
+                        buyerName,
+
+                    p_buyer_email:
+                        buyerEmail,
+
+                    p_buyer_phone:
+                        buyerPhone || null,
+
+                    p_message:
+                        buyerMessage
+                }
+            );
+
+
+        if (error) {
+
+            console.error(
+                "Equipment enquiry submission error:",
+                error
+            );
+
+
+            enquiryError.textContent =
+                "We were unable to send your enquiry. Please try again.";
+
+            enquiryError.style.display =
+                "block";
+
+
+            enquirySubmitButton.disabled =
+                false;
+
+            enquirySubmitButton.textContent =
+                "Send Enquiry";
+
+            return;
+        }
+
+
+        console.log(
+            "Equipment enquiry submitted:",
+            data
+        );
+
+
+        // -------------------------------------------------
+        // Success
+        // -------------------------------------------------
+
+        enquirySuccess.textContent =
+            "Thank you. Your enquiry has been sent successfully. We will follow up with you.";
+
+        enquirySuccess.style.display =
+            "block";
+
+
+        enquiryFormReset();
+
+
+        enquirySubmitButton.disabled =
+            false;
+
+        enquirySubmitButton.textContent =
+            "Send Enquiry";
+    }
+
+    function enquiryFormReset() {
+
+        enquiryName.value =
+            "";
+
+        enquiryEmail.value =
+            "";
+
+        enquiryPhone.value =
+            "";
+
+        enquiryMessage.value =
+            "I'm interested in this equipment and would like more information.";
+    }
+    
     // =====================================================
     // SHOW ERROR
     // =====================================================
@@ -629,6 +861,24 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 
+    // =====================================================
+    // ENQUIRY FORM EVENT
+    // =====================================================
+
+    if (listingEnquiryForm) {
+
+        listingEnquiryForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                await submitEnquiry();
+
+            }
+        );
+    }
+    
     // =====================================================
     // START
     // =====================================================
