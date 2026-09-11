@@ -959,16 +959,55 @@ async function loadAdminEnquiries() {
                         : ""
                 }
 
-                <p>
-                    <strong>
-                        Status:
-                    </strong>
-                    ${escapeHtml(
-                        formatEnquiryStatus(
-                            status
-                        )
-                    )}
-                </p>
+                <div
+                    style="
+                        margin-top: 15px;
+                        padding-top: 15px;
+                        border-top: 1px solid #edf0f2;
+                    "
+                >
+
+                    <label
+                        for="enquiry-status-${enquiry.id}"
+                        style="
+                            display: block;
+                            margin-bottom: 7px;
+                            font-weight: 700;
+                        "
+                    >
+                        Status
+                    </label>
+
+                    <select
+                        id="enquiry-status-${enquiry.id}"
+                        class="admin-enquiry-status"
+                        data-enquiry-id="${enquiry.id}"
+                        data-previous-status="${status}"
+                    >
+                        <option
+                            value="new"
+                            ${status === "new" ? "selected" : ""}
+                        >
+                            New
+                        </option>
+
+                        <option
+                            value="contacted"
+                            ${status === "contacted" ? "selected" : ""}
+                        >
+                            Contacted
+                        </option>
+
+                        <option
+                            value="closed"
+                            ${status === "closed" ? "selected" : ""}
+                        >
+                            Closed
+                        </option>
+
+                    </select>
+
+                </div>
 
                 <div
                     style="
@@ -998,9 +1037,119 @@ async function loadAdminEnquiries() {
         adminEnquiries.appendChild(
             card
         );
+
+        const statusSelect =
+            card.querySelector(
+                ".admin-enquiry-status"
+            );
+
+
+        statusSelect.addEventListener(
+            "change",
+            async function () {
+
+                const newStatus =
+                    statusSelect.value;
+
+
+                await updateEnquiryStatus(
+                    enquiry.id,
+                    newStatus,
+                    statusSelect
+                );
+            }
+        );
+        
     });
 }
+// =====================================================
+// UPDATE ADMIN ENQUIRY STATUS
+// =====================================================
 
+async function updateEnquiryStatus(
+    enquiryId,
+    newStatus,
+    statusSelect
+) {
+
+    const previousStatus =
+        statusSelect.dataset.previousStatus;
+
+
+    statusSelect.disabled =
+        true;
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.rpc(
+            "admin_update_enquiry_status",
+            {
+                p_enquiry_id:
+                    enquiryId,
+
+                p_status:
+                    newStatus
+            }
+        );
+
+
+    if (error) {
+
+        console.error(
+            "Enquiry status update error:",
+            error
+        );
+
+
+        alert(
+            "The enquiry status could not be updated.\n\n" +
+            error.message
+        );
+
+
+        statusSelect.value =
+            previousStatus;
+
+        statusSelect.disabled =
+            false;
+
+        return;
+    }
+
+
+    if (data !== true) {
+
+        alert(
+            "The enquiry status was not updated."
+        );
+
+
+        statusSelect.value =
+            previousStatus;
+
+        statusSelect.disabled =
+            false;
+
+        return;
+    }
+
+
+    console.log(
+        "Enquiry status updated:",
+        enquiryId,
+        newStatus
+    );
+
+
+    statusSelect.dataset.previousStatus =
+        newStatus;
+
+    statusSelect.disabled =
+        false;
+}
 // =====================================================
 // FORMAT ENQUIRY STATUS
 // =====================================================
