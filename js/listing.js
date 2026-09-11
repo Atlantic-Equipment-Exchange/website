@@ -769,7 +769,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         buyerPhone || null,
 
                     p_message:
-                        buyerMessage
+                        buyerMessage,
                         
                     p_website:
                         website
