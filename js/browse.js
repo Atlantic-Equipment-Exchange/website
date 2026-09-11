@@ -439,9 +439,17 @@ document.addEventListener("DOMContentLoaded", async function () {
                 listing.id
             );
 
-
         viewLink.textContent =
             "View";
+
+        viewLink.setAttribute(
+            "aria-label",
+            "View " +
+            (
+                listing.title ||
+                "equipment listing"
+            )
+        );
 
 
         footer.appendChild(
