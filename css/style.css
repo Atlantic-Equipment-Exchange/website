@@ -1241,7 +1241,85 @@ body {
     }
 
 }
+/* =========================================================
+   LISTING ENQUIRY
+========================================================= */
 
+.listing-enquiry {
+    margin-top: 40px;
+
+    padding: 35px;
+
+    background: white;
+
+    border:
+        1px solid #e0e6ea;
+
+    border-radius: 10px;
+}
+
+
+.listing-enquiry h2 {
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+    color: #102f45;
+}
+
+
+.listing-enquiry > p {
+    margin-bottom: 30px;
+
+    color: #687782;
+}
+
+
+.listing-enquiry .form-group {
+    margin-bottom: 22px;
+}
+
+
+.listing-enquiry .form-submit {
+    border-top: none;
+
+    padding-top: 5px;
+}
+
+
+#enquiry-success {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-radius: 5px;
+
+    background: #eaf4ea;
+
+    color: #285c2a;
+}
+
+
+#enquiry-error {
+    margin-top: 20px;
+
+    padding: 15px;
+
+    border-radius: 5px;
+
+    background: #fbeaea;
+
+    color: #8a2d2d;
+}
+
+
+@media (max-width: 700px) {
+
+    .listing-enquiry {
+        padding: 25px;
+    }
+
+}
 /* =========================================================
    BROWSE MOBILE
 ========================================================= */
