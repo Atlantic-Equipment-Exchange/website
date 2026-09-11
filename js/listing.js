@@ -119,7 +119,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById(
             "enquiry-message"
         );
-
+    const enquiryWebsite =
+        document.getElementById(
+            "enquiry-website"
+        );
     const enquirySubmitButton =
         document.getElementById(
             "enquiry-submit-button"
@@ -663,7 +666,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         const buyerMessage =
             enquiryMessage.value.trim();
-
+        const website =
+            enquiryWebsite
+                ? enquiryWebsite.value.trim()
+                : "";
     
         // -------------------------------------------------
         // Basic client-side validation
@@ -764,6 +770,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                     p_message:
                         buyerMessage
+                        
+                    p_website:
+                        website
                 }
             );
 
@@ -777,8 +786,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
             enquiryError.textContent =
-                "We were unable to send your enquiry. Please try again.";
-
+                    error.message ||
+                    "We were unable to send your enquiry. Please try again.";
+            
             enquiryError.style.display =
                 "block";
 
